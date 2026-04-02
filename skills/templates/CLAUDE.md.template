@@ -1,0 +1,82 @@
+# [Projektname]
+
+[Kurzbeschreibung: Was macht das Projekt, für wen, auf welcher Plattform?]
+
+---
+
+## Stack
+
+- Language:
+- UI / Frontend:
+- Architecture:
+- Database / Storage:
+- DI / IoC:
+- Build-System:
+
+## Build
+
+```bash
+# [Build-Kommando]       # z.B. ./gradlew assembleDebug
+# [Test-Kommando]        # z.B. ./gradlew test
+# [Lint-Kommando]        # z.B. ./gradlew lint
+```
+
+## Projektstruktur
+
+```
+[Verzeichnisbaum einfügen]
+```
+
+## Code-Konventionen
+
+- [Klassen-Konvention]
+- [Datei-Konvention]
+- [Namenskonventionen für projektspezifische Typen]
+- [Async-Pattern: z.B. Coroutines, RxJava, async/await]
+- [State-Management: z.B. StateFlow, LiveData, Redux]
+
+## Features (geplant)
+
+1. [Feature 1]
+2. [Feature 2]
+
+---
+
+# ⚠️ Projektspezifische Regeln
+
+> Hier kommen Regeln rein die Claude Code strikt einhalten muss —
+> Sicherheitsregeln, Datenverlust-Schutz, Architektur-Constraints.
+> Alles was Claude ohne explizite Bestätigung NICHT tun darf.
+>
+> Beispiele:
+> - Stopp-Pflicht vor DB-Schema-Änderungen
+> - Pflicht-Bibliotheken die immer verwendet werden müssen
+> - Dateien oder Verzeichnisse die nie angefasst werden dürfen
+> - Secrets die nie geloggt oder committed werden dürfen
+
+## [Regelname] — [Kurzbeschreibung]
+
+[Details, Auslöser, erlaubte Optionen, Codebeispiele]
+
+---
+
+# V-Modell Workflow
+
+Projektkontext für alle Rollen: `.claude/project.md`
+Skill-Dateien: `.claude/skills/` (Submodule → vmodel-framework)
+
+## Kommandos
+
+| Kommando | Aktion |
+|----------|--------|
+| `@vmodel <Feature>` | Vollständiger Durchlauf ab Phase 01 |
+| `@vmodel status` | Aktuellen Workflow-Status anzeigen |
+| `@arch <Feature>` | Direkt zu Phase 02 (Architektur) |
+| `@dev` | Direkt zu Phase 03 (Entwicklung) |
+| `@test` | Direkt zu Phase 04 (Unit Tests) |
+| `@review` | Reviewer-Rolle für letzte Phase |
+
+## Wann V-Modell nutzen?
+
+Ja: Neues Feature mit nicht-trivialer Architektur, Breaking Changes, mehrere Schichten betroffen.
+Nein: Bugfixes, einfache UI-Anpassungen, Konfigurationsänderungen — direkt coden.

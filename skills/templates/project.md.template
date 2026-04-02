@@ -1,0 +1,132 @@
+# Projekt-Kontext: [Projektname]
+
+> Diese Datei verbindet das V-Modell Framework mit dem spezifischen Projekt.
+> Sie wird von allen Rollen-Skills als primäre Kontextquelle gelesen.
+> Einmalig befüllen, dann bei größeren Änderungen aktualisieren.
+
+---
+
+## Projekt-Übersicht
+
+**Name:** [Projektname]
+**Typ:** [z.B. Mobile App / Web-Backend / CLI-Tool / Library]
+**Ziel:** [1-2 Sätze: Was macht das Projekt, für wen?]
+**Status:** [z.B. Greenfield / Aktive Entwicklung / Maintenance]
+**Zielplattform:** [z.B. Android 8+, Web (Chrome/Firefox), Linux x64]
+
+---
+
+## Zielgruppe
+
+**Primärer Nutzer:** [z.B. Privatpersonen mit Asthma-Diagnose]
+**Technisches Niveau:** [z.B. nicht-technisch / Entwickler / Experten]
+**Nutzungskontext:** [z.B. täglich mobil / gelegentlich Desktop / kritische Umgebung]
+
+---
+
+## Tech Stack
+
+**Sprache(n):** 
+**UI / Frontend:** 
+**Backend / Logik:** 
+**Datenhaltung:** 
+**Build-System:** 
+**Wichtige Bibliotheken:** 
+
+---
+
+## Architektur-Prinzipien
+
+**Schichten-Modell:**
+```
+[Schicht 1: z.B. UI] → [Schicht 2: z.B. Domain] ← [Schicht 3: z.B. Data]
+```
+
+**Abhängigkeitsregel:** [z.B. Abhängigkeiten zeigen nur nach innen]
+
+**Architektur-Pattern:** [z.B. MVVM, Clean Architecture, MVC, Hexagonal]
+
+**Weitere Prinzipien:**
+- [z.B. Offline-First: Alle Daten lokal, kein Netzwerkzwang]
+- [z.B. Single Source of Truth: Repository als einzige Datenquelle]
+
+---
+
+## Coding Standards
+
+**Namenskonventionen:**
+- [z.B. Klassen: PascalCase]
+- [z.B. Funktionen: camelCase]
+- [z.B. Konstanten: SCREAMING_SNAKE_CASE]
+
+**Projektspezifische Konventionen:**
+- [z.B. ViewModels enden auf `ViewModel`]
+- [z.B. Interfaces enden auf kein Suffix]
+- [z.B. Test-Klassen enden auf `Test`]
+
+**Code-Qualitäts-Tools:** [z.B. Lint, Detekt, ESLint, Ruff]
+
+---
+
+## Test-Framework
+
+**Unit Tests:** [z.B. JUnit 5 + MockK]
+**Integrations Tests:** [z.B. Room In-Memory + AndroidX Test]
+**UI / System Tests:** [z.B. Espresso + Compose UI Test]
+**Test-Namenskonvention:** [z.B. `[methode]_[szenario]_[erwartung]()`]
+
+---
+
+## Constraints (Randbedingungen)
+
+Technische und fachliche Constraints die alle Phasen berücksichtigen müssen:
+
+- **RB-C01:** [z.B. Keine Netzwerkverbindung — alles lokal]
+- **RB-C02:** [z.B. Min. SDK / Runtime-Version: ...]
+- **RB-C03:** [z.B. Datenschutz: Gesundheitsdaten dürfen das Gerät nicht verlassen]
+- **RB-C04:** [z.B. Lizenz: Nur LGPL/MIT-kompatible Bibliotheken]
+- [weitere...]
+
+---
+
+## Besondere Projektregeln
+
+> Hier projektspezifische Regeln eintragen die über normale Coding-Standards hinausgehen.
+> Details und Codebeispiele stehen in CLAUDE.md — hier nur Stichworte als Verweis.
+
+- **[Regelname]:** [Kurzbeschreibung] — Details: CLAUDE.md → [Abschnittsname]
+- Beispiel: **DB-Migration Stopp-Pflicht:** Vor Schema-Änderungen muss Nutzer bestätigen — Details: CLAUDE.md → Datenverlust-Schutz
+
+---
+
+## Definition of Done
+
+Ein Feature gilt als fertig wenn:
+
+- [ ] Alle funktionalen Anforderungen (FA) implementiert und getestet
+- [ ] Alle nicht-funktionalen Anforderungen (NFA) verifiziert
+- [ ] Unit Tests vorhanden (Abdeckung: alle FAs)
+- [ ] Integrationstests vorhanden (Datenpersistenz verifiziert)
+- [ ] Systemtest bestanden (alle FAs manuell geprüft)
+- [ ] Code Review durchgeführt (kein kritischer Befund offen)
+- [ ] Keine Lint/Compiler-Warnungen
+- [ ] [projektspezifisch: z.B. CHANGELOG aktualisiert]
+- [ ] [projektspezifisch: z.B. Play Store Screenshots aktuell]
+
+---
+
+## Artefakt-Verzeichnis
+
+Alle generierten V-Modell Artefakte liegen unter:
+`.claude/artifacts/`
+
+| Datei | Inhalt | Phase |
+|-------|--------|-------|
+| `00_status.md` | Workflow-Status | Orchestrator |
+| `requirements.md` | Anforderungen | 01 |
+| `architecture.md` | Architektur | 02 |
+| `implementation_notes.md` | Implementierungsnotizen | 03 |
+| `unit_test_report.md` | Unit Test Ergebnisse | 04 |
+| `integration_test_report.md` | Integrationstest Ergebnisse | 05 |
+| `system_test_report.md` | Systemtest Ergebnisse | 06 |
+| `review_[phase].md` | Review-Berichte | 07 |
