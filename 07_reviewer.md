@@ -198,14 +198,20 @@ Prüfe `.claude/artifacts/traceability_matrix.md` und `.claude/artifacts/impact_
 
 ## Bewertungsschema
 
-**Kritisch (blockiert Freigabe)**
+| Symbol | Bedeutung | Auslöser |
+|--------|-----------|---------|
+| ✅ | **Freigegeben** — keine oder nur Minor-Befunde | Ausschließlich Verbesserungsvorschläge, keine Auflagen |
+| ⚠️ | **Freigegeben mit Auflagen** — mindestens ein Major-Befund | Muss vor nächster Phase / vor Release behoben werden |
+| ❌ | **Nicht freigegeben** — mindestens ein Kritischer Befund | Blockiert sofort, kein Weiterarbeiten bis behoben |
+
+**Kritisch ❌ (blockiert Freigabe)**
 Muss vor Weiterarbeit behoben werden. Führt sonst zu Defekten, Datenverlust oder Sicherheitsproblemen.
 
-**Major (sollte behoben werden)**
-Beeinträchtigt Qualität, Wartbarkeit oder Vollständigkeit. Freigabe unter Vorbehalt möglich.
+**Major ⚠️ (Auflage)**
+Beeinträchtigt Qualität, Korrektheit, Wartbarkeit oder Vollständigkeit. Freigabe unter Vorbehalt.
 
-**Minor (Verbesserungsvorschlag)**
-Keine Blockade. Kann im aktuellen oder nächsten Iteration behoben werden.
+**Minor ✅ (Verbesserungsvorschlag)**
+Keine Blockade. Wird dokumentiert, kein Zwang zur sofortigen Behebung.
 
 ---
 
@@ -220,19 +226,19 @@ Schreibe nach: `.claude/artifacts/review_[phase].md`
 **Geprüftes Artefakt:** [Dateiname / Beschreibung]
 
 ## Ergebnis
-[ ] ✅ Freigegeben ohne Änderungen
-[ ] ⚠️ Freigegeben mit Auflagen (Major-Befunde müssen behoben werden)
-[ ] ❌ Nicht freigegeben (Kritische Befunde)
+[ ] ✅ Freigegeben — nur Minor-Befunde (keine Auflagen)
+[ ] ⚠️ Freigegeben mit Auflagen — mindestens ein Major-Befund
+[ ] ❌ Nicht freigegeben — mindestens ein Kritischer Befund
 
 ## Befunde
 
-### Kritisch
+### Kritisch ❌
 - [Befund] — [Empfehlung]
 
-### Major
+### Major ⚠️
 - [Befund] — [Empfehlung]
 
-### Minor / Verbesserungsvorschläge
+### Minor ✅ / Verbesserungsvorschläge
 - [Befund] — [Empfehlung]
 
 ## Freigabe-Begründung
@@ -245,11 +251,11 @@ Schreibe nach: `.claude/artifacts/review_[phase].md`
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Review abgeschlossen — [Ergebnis]
+[✅/⚠️/❌] Review abgeschlossen — [Ergebnis]
 
-Optionen:
-  W) Weiter zur nächsten Phase
-  Ä) Änderungen einarbeiten, dann erneut reviewen
+✅ Nur Minor-Befunde → W) Weiter zur nächsten Phase
+⚠️ Major-Befunde    → Ä) Auflagen einarbeiten, dann weiter
+❌ Kritische Befunde → Phase muss wiederholt werden
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
