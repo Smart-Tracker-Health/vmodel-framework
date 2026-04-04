@@ -70,6 +70,15 @@ Typisch: stabile Schichten zuerst, UI zuletzt.
 - [ ] Keine zirkulären Abhängigkeiten
 - [ ] Implementierungsreihenfolge logisch und umsetzbar
 
+## Traceability-Pflichten
+
+**Neue Komponente / neue Datei geplant:**
+- Eintrag in `.claude/artifacts/impact_map.md` ergänzen: Req-ID → Schicht → Dateiname
+- Schnell-Referenz am Ende der `impact_map.md` (Datei → Req-IDs) aktualisieren
+
+**Architektur geändert (Schichtzuordnung, Dateistruktur):**
+- Betroffene Einträge in `impact_map.md` korrigieren
+
 ---
 
 ## Artefakt

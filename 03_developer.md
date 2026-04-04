@@ -68,6 +68,19 @@ Fortschrittsmeldung nach jeder Schicht:
 
 ---
 
+## Traceability-Pflichten
+
+**Neue Datei erstellt:**
+- Datei + zugehörige Req-IDs in die Schnell-Referenz von `.claude/artifacts/impact_map.md` eintragen
+
+**Bestehende Datei geändert (neue Funktion, neues Feld):**
+- Prüfen ob neue Req-IDs betroffen sind → `impact_map.md` Schnell-Referenz aktualisieren
+
+**Datei umbenannt / verschoben:**
+- Alle Vorkommen in `impact_map.md` korrigieren (Req-Einträge + Schnell-Referenz)
+
+---
+
 ## Artefakt
 
 Kein eigenes Markdown-Artefakt — der Code ist das Artefakt.

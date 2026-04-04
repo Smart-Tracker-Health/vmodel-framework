@@ -72,6 +72,7 @@ Erstelle vor dem Schreiben eine Mapping-Tabelle:
 - [ ] Tests sind unabhängig (Reihenfolge irrelevant)
 - [ ] Keine Logik im Test selbst (kein if/loop im Test-Code)
 - [ ] Testname beschreibt was getestet wird, nicht wie
+- [ ] Spalte "Unit Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
 
 ---
 

@@ -89,6 +89,7 @@ Aus `project.md` → Definition of Done übernehmen:
 - [ ] Negative Tests und Edge Cases abgedeckt
 - [ ] Regression geprüft
 - [ ] Definition of Done aus project.md vollständig geprüft
+- [ ] Spalte "System Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
 
 ---
 

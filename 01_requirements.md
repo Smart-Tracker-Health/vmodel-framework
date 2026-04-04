@@ -71,6 +71,20 @@ Verhindert Scope Creep und spätere Missverständnisse.
 - [ ] Out-of-Scope definiert
 - [ ] Offene Punkte dokumentiert
 
+## Traceability-Pflichten
+
+**Neue Anforderung:**
+- Neue Zeile in `.claude/artifacts/traceability_matrix.md` eintragen (Req-ID, Beschreibung, Coverage = ❌)
+- Neuen Eintrag in `.claude/artifacts/impact_map.md` eintragen (Schichten + Dateien — ggf. mit Architect abstimmen)
+
+**Anforderung geändert:**
+- Betroffene Zeile in `traceability_matrix.md` aktualisieren
+- Betroffenen Eintrag in `impact_map.md` auf Aktualität prüfen
+
+**Anforderung gelöscht:**
+- Zeile aus `traceability_matrix.md` entfernen
+- Eintrag aus `impact_map.md` entfernen
+
 ---
 
 ## Artefakt

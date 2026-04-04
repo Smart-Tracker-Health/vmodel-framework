@@ -93,6 +93,23 @@ Prüfe den implementierten Code:
 
 ---
 
+## Traceability Review (Pflicht bei jedem Review)
+
+Prüfe `.claude/artifacts/traceability_matrix.md` und `.claude/artifacts/impact_map.md`:
+
+### Traceability Matrix
+- [ ] Alle neuen/geänderten Req-IDs haben eine Zeile in der Matrix
+- [ ] Tester-Spalten (Unit/Integration/System) sind für diese Phase aktualisiert
+- [ ] Coverage-Spalte korrekt gesetzt: ✅ (alle Ebenen grün) / ⚠️ (ST ausstehend) / ❌ (keine Abdeckung)
+- [ ] Keine ❌-Einträge ohne dokumentierten Grund in "Offene Lücken"
+
+### Impact Map
+- [ ] Neue Dateien aus Phase 03 sind in `impact_map.md` eingetragen
+- [ ] Schnell-Referenz (Datei → Req-IDs) am Ende der `impact_map.md` ist aktuell
+- [ ] Keine Req-ID in `impact_map.md` die nicht in `requirements.md` existiert
+
+---
+
 ## Bewertungsschema
 
 **Kritisch (blockiert Freigabe)**

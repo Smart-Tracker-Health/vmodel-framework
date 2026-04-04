@@ -71,6 +71,7 @@ Für jede FA die Datenpersistenz betrifft:
 - [ ] Datenmigration getestet (falls vorhanden)
 - [ ] Keine Produktion-Infrastruktur verwendet (nur Test-Doubles / In-Memory)
 - [ ] Defekte aus Phase 04 die auf Integrationsebene lagen sind abgedeckt
+- [ ] Spalte "Integration Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
 
 ---
 
