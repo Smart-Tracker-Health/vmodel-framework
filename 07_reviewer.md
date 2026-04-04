@@ -102,6 +102,9 @@ Prüfe `.claude/artifacts/traceability_matrix.md` und `.claude/artifacts/impact_
 - [ ] Tester-Spalten (Unit/Integration/System) sind für diese Phase aktualisiert
 - [ ] Coverage-Spalte korrekt gesetzt: ✅ (alle Ebenen grün) / ⚠️ (ST ausstehend) / ❌ (keine Abdeckung)
 - [ ] Keine ❌-Einträge ohne dokumentierten Grund in "Offene Lücken"
+- [ ] Status-Tabellen (Unit/Integration/System-Test-Implementierungsstand) aktuell:
+  - Nach erfolgreichem Testlauf auf Gerät/Emulator: ⚠️ → ✅ setzen
+  - Gesamtzeile der jeweiligen Tabelle ebenfalls aktualisieren
 
 ### Impact Map
 - [ ] Neue Dateien aus Phase 03 sind in `impact_map.md` eingetragen

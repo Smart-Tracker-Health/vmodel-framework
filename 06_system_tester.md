@@ -90,6 +90,7 @@ Aus `project.md` → Definition of Done übernehmen:
 - [ ] Regression geprüft
 - [ ] Definition of Done aus project.md vollständig geprüft
 - [ ] Spalte "System Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
+- [ ] Neue Testklasse in Tabelle "System-Test-Implementierungsstand" eingetragen (Klasse, Anzahl Tests, ST-IDs, Status ⚠️)
 
 ---
 

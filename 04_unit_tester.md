@@ -73,6 +73,7 @@ Erstelle vor dem Schreiben eine Mapping-Tabelle:
 - [ ] Keine Logik im Test selbst (kein if/loop im Test-Code)
 - [ ] Testname beschreibt was getestet wird, nicht wie
 - [ ] Spalte "Unit Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
+- [ ] Neue Testklasse in Tabelle "Unit-Test-Implementierungsstand" eingetragen (Klasse, Anzahl Tests, Test-IDs, Req-IDs, Status ⚠️)
 
 ---
 
