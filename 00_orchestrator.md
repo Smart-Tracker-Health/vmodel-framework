@@ -50,6 +50,9 @@ Erstelle / aktualisiere `.claude/artifacts/00_status.md`:
 | Review Requirements | nach 01 | ⏳ Offen |
 | Review Architektur | nach 02 | ⏳ Offen |
 | Code Review | nach 03 | ⏳ Offen |
+| Review Unit Tests | nach 04 | ⏳ Offen |
+| Review Integrationstests | nach 05 | ⏳ Offen |
+| Review Systemtests | nach 06 | ⏳ Offen |
 
 ## Offene Punkte
 - (keine)
@@ -61,18 +64,25 @@ Erstelle / aktualisiere `.claude/artifacts/00_status.md`:
 
 ### Normale Reihenfolge
 ```
-01 Requirements → [Review] → 02 Architect → [Review] → 03 Developer → [Review]
-→ 04 Unit Tester → 05 Integration Tester → 06 System Tester → ✅ Abschluss
+01 Requirements → [Review 01] → 02 Architect → [Review 02] → 03 Developer → [Review 03]
+→ 04 Unit Tester → [Review 04] → 05 Integration Tester → [Review 05]
+→ 06 System Tester → [Review 06] → ✅ Abschluss
 ```
 
 ### Nach jeder Phase
 1. Status-Datei aktualisieren (Phase auf ✅ Abgeschlossen setzen)
-2. Nächste Schritte klar kommunizieren
-3. Auf Bestätigung warten — **niemals automatisch zur nächsten Phase**
+2. **Review anbieten** — nach JEDER Phase (01–06), nicht nur nach den ersten drei
+3. Nächste Schritte klar kommunizieren
+4. Auf Bestätigung warten — **niemals automatisch zur nächsten Phase**
 
 ### Review-Entscheidung
-Reviews sind **empfohlen** nach Phase 01, 02, 03.
-Der Nutzer kann sie überspringen mit `W` (Weiter) oder erzwingen mit `R` (Review).
+Reviews sind **Pflicht** nach Phase 01, 02, 03 (Anforderungen, Architektur, Code).
+Reviews sind **empfohlen** nach Phase 04, 05, 06 (Unit Tests, Integrations-, Systemtests).
+Der Nutzer kann sie überspringen mit `W` (Weiter) oder explizit anfordern mit `R` (Review).
+
+> **Warum Reviews bei Testphasen?**
+> Testfehler wie fehlende Boundary-Value-Tests werden nur durch Review entdeckt —
+> nicht durch das Ausführen der Tests selbst. "Alle Tests grün" ≠ "Tests vollständig".
 
 ---
 
@@ -117,12 +127,12 @@ Wenn Phase 06 (System Tester) mit Freigabe abgeschlossen ist:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Feature [Name] — ABGESCHLOSSEN
-   Requirements:   ✅
-   Architektur:    ✅
-   Implementierung:✅
-   Unit Tests:     ✅
-   Integration:    ✅
-   System Test:    ✅
+   Requirements:       ✅  | Review 01: ✅
+   Architektur:        ✅  | Review 02: ✅
+   Implementierung:    ✅  | Review 03: ✅
+   Unit Tests:         ✅  | Review 04: ✅
+   Integration:        ✅  | Review 05: ✅
+   System Test:        ✅  | Review 06: ✅
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 

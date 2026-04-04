@@ -93,6 +93,89 @@ Prüfe den implementierten Code:
 
 ---
 
+## Review Unit Tests (nach Phase 04)
+
+Prüfe alle Dateien unter `src/test/`:
+
+### Vollständigkeit
+- [ ] Jede Business-Rule hat mindestens einen Testfall
+- [ ] **Boundary Value Analysis:** Jede Regel mit Schwellenwert hat Tests *an* der Grenze (nicht nur weit davon entfernt)
+  - Beispiel: Mittag-Grenze → Tests bei 11:59 und 12:01, nicht nur 8:00 und 20:00
+- [ ] Happy Path und Fehler-/Edge-Cases abgedeckt
+- [ ] Alle Req-IDs aus `requirements.md` die Unit-testbare Logik enthalten sind abgedeckt
+
+### Test-Qualität
+- [ ] Keine Logik in Tests (kein `if`, kein `for`, kein `when`)
+- [ ] Tests sind unabhängig voneinander (Reihenfolge egal)
+- [ ] Nur Interfaces gemockt, keine konkreten Implementierungen
+- [ ] Testname beschreibt Szenario eindeutig (`methodName_condition_expectedResult`)
+- [ ] Keine Magic Numbers ohne Kommentar
+- [ ] Jeder Test hat genau ein `assert` (oder mehrere die dasselbe Ergebnis prüfen)
+
+### Konsistenz mit Artefakten
+- [ ] Test-IDs (UT-XX-YY) stimmen mit `unit_test_report.md` überein
+- [ ] Anzahl Tests in `traceability_matrix.md` und `00_status.md` korrekt
+- [ ] Implementierungsstand-Tabelle in `traceability_matrix.md` aktuell
+
+---
+
+## Review Integrationstests (nach Phase 05)
+
+Prüfe alle Dateien unter `src/androidTest/` die auf `Test` enden (keine UI-Tests):
+
+### Vollständigkeit
+- [ ] Alle DAOs aus `architecture.md` haben Integrationstests
+- [ ] Vollständige CRUD-Zyklen getestet (Insert → Read → Update → Delete)
+- [ ] Datenmigration getestet falls Schema geändert wurde
+- [ ] Repository-Integrationstest vorhanden (Business-Logik + DAO zusammen)
+
+### Test-Qualität
+- [ ] Echte Room In-Memory DB verwendet (`Room.inMemoryDatabaseBuilder`)
+- [ ] Keine Produktions-Infrastruktur (kein echter Dateipfad)
+- [ ] Jeder Test startet mit sauberem DB-Zustand
+- [ ] **Boundary Value Analysis:** Falls DAOs eigene Logik haben → Grenzen getestet
+- [ ] Keine Logik in Tests
+
+### Migrationstests (falls vorhanden)
+- [ ] Testdaten in alter Schema-Version angelegt
+- [ ] Migration durchgeführt und Datenintegrität geprüft
+- [ ] NULL-Werte und Default-Werte nach Migration korrekt
+
+### Konsistenz mit Artefakten
+- [ ] Test-IDs stimmen mit `integration_test_report.md` überein
+- [ ] Anzahl Tests in `traceability_matrix.md` und `00_status.md` korrekt
+
+---
+
+## Review Systemtests (nach Phase 06)
+
+Prüfe alle Dateien unter `src/androidTest/ui/system/`:
+
+### Vollständigkeit
+- [ ] Jede FA aus `requirements.md` hat mindestens einen Systemtestfall
+- [ ] Jede NFA die automatisierbar ist hat einen Testfall
+- [ ] Negative Tests vorhanden (ungültige Eingaben, Abbrechen, leere Zustände)
+- [ ] Regressionstests für zentrale bestehende Features
+
+### Test-Qualität
+- [ ] Tests nutzen semantische Selektoren (`.onNodeWithText`, `.onNodeWithContentDescription`) — keine Pixel-Koordinaten
+- [ ] Keine Thread.sleep() — stattdessen `waitUntil` oder Idling Resources
+- [ ] Tests sind unabhängig (kein Shared State zwischen Tests)
+- [ ] Testname und ST-ID aus `system_test_report.md` erkennbar
+- [ ] **Kein Over-Specification:** Test prüft funktionales Ergebnis, nicht UI-interne Implementierung
+
+### Negative Tests & Edge Cases
+- [ ] Leere DB → sinnvolle Darstellung getestet
+- [ ] Invalide Eingaben → korrekte Fehlermeldung getestet
+- [ ] Zurück-Navigation → kein Datenverlust getestet
+
+### Konsistenz mit Artefakten
+- [ ] ST-IDs stimmen mit `system_test_report.md` überein
+- [ ] Spalte "System Test" in `traceability_matrix.md` für alle getesteten Req-IDs aktuell
+- [ ] Anzahl Tests in `00_status.md` korrekt
+
+---
+
 ## Traceability Review (Pflicht bei jedem Review)
 
 Prüfe `.claude/artifacts/traceability_matrix.md` und `.claude/artifacts/impact_map.md`:
