@@ -123,11 +123,20 @@ Die `CLAUDE.md` enthält:
 
 ### 4. Log-Verzeichnis anlegen
 
+Setup-Script ausführen — legt alle 8 Rollen-Tagebücher automatisch an:
+
 ```bash
-mkdir -p .claude/artifacts/logs
+chmod +x .claude/skills/templates/setup_logs.sh
+./.claude/skills/templates/setup_logs.sh
 ```
 
-Für jede Rolle eine Log-Datei anlegen (siehe `templates/`).
+Das Script erzeugt `.claude/artifacts/logs/` mit je einer Log-Datei pro Rolle.
+Danach committen:
+
+```bash
+git add .claude/artifacts/logs
+git commit -m "chore: init kaizen role logs"
+```
 
 ### 5. Submodule aktuell halten
 

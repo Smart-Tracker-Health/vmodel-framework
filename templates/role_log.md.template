@@ -1,0 +1,11 @@
+# [ROLLENNAME] Log
+
+<!--
+Dieses Tagebuch wird vom Kaizen-Prozessoptimierer (@kaizen) vor jedem Release ausgewertet.
+
+Format pro Eintrag:
+## YYYY-MM-DD | Feature: <Name> | Release: <Version>
+- Was lief nicht gut / was war unklar
+- Was würde ich beim nächsten Mal anders machen
+- Empfehlung für andere Rollen oder den Prozess
+-->
