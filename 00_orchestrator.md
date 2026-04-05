@@ -16,6 +16,7 @@ Beim Start (`@vmodel <Feature>`) führst du folgende Schritte aus:
 
 ### 1. Kontext laden
 Lies in dieser Reihenfolge:
+- `.claude/skills/CONVENTIONS.md` → Globale Framework-Konventionen (Rollen-Prefix etc.)
 - `.claude/project.md` → Projektkontext, Stack, Regeln, Definition of Done
 - `CLAUDE.md` → Projektspezifische Entwicklungsregeln
 - `.claude/artifacts/00_status.md` → aktueller Workflow-Status (falls vorhanden)
