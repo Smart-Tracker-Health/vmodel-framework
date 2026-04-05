@@ -2,7 +2,7 @@
 
 Ein wiederverwendbares V-Modell Workflow-Framework für Claude Code.
 
-Definiert 8 spezialisierte Rollen als Skill-Dateien — technologie-agnostisch, projektübergreifend einsetzbar. Claude Code liest die Skill-Dateien und übernimmt die jeweilige Rolle vollständig, produziert Artefakte und wartet auf Freigabe bevor es zur nächsten Phase geht.
+Definiert 9 spezialisierte Rollen als Skill-Dateien — technologie-agnostisch, projektübergreifend einsetzbar. Claude Code liest die Skill-Dateien und übernimmt die jeweilige Rolle vollständig, produziert Artefakte und wartet auf Freigabe bevor es zur nächsten Phase geht.
 
 ---
 
@@ -12,17 +12,18 @@ Jede Entwicklungsphase wird von einer dedizierten Rolle übernommen. Die Rollen 
 
 ```
 vmodel-framework/          ← dieses Repo (Submodule)
-    skills/
-        00_orchestrator.md
-        01_requirements.md
-        ...
+    CONVENTIONS.md         ← Globale Konventionen (Rollen-Prefix etc.)
+    00_orchestrator.md
+    01_requirements.md
+    ...
 
 mein-projekt/
     CLAUDE.md              ← Projektregeln
     .claude/
         project.md         ← Kontext-Bridge (Stack, DoD, Constraints)
-        skills/            ← Submodule → vmodel-framework/skills/
+        skills/            ← Submodule → vmodel-framework
         artifacts/         ← generiert während des Workflows
+            logs/          ← Rollen-Tagebücher (für Kaizen)
 ```
 
 ---
@@ -36,26 +37,46 @@ SPEZIFIKATION                    VERIFIKATION
 02 Software Architect       ←──► 05 Integrations Tester
 03 Developer                ←──► 04 Unit Tester
          ↕
-    07 Reviewer (nach jeder Phase optional)
+    07 Reviewer (nach jeder Phase)
     00 Orchestrator (steuert den gesamten Ablauf)
+         ↓
+    08 Kaizen (retrospektiv vor jedem Release)
 ```
 
-Der Orchestrator verwaltet den Status in `.claude/artifacts/00_status.md` und stellt sicher, dass keine Phase übersprungen wird und alle Artefakte konsistent sind.
+Der Orchestrator verwaltet den Status in `.claude/artifacts/00_status.md` und stellt sicher, dass keine Phase übersprungen wird und alle Artefakte konsistent sind. Vor jedem Release triggert der Orchestrator automatisch den Kaizen-Prozessoptimierer.
 
 ---
 
 ## Rollen & Skill-Dateien
 
-| Datei | Rolle | Artefakt |
-|-------|-------|----------|
-| `00_orchestrator.md` | PM & Workflow-Controller | `00_status.md` |
-| `01_requirements.md` | Requirements Engineer | `requirements.md` |
-| `02_architect.md` | Software Architect | `architecture.md` |
-| `03_developer.md` | Developer | Code + `implementation_notes.md` |
-| `04_unit_tester.md` | Unit Tester | `unit_test_report.md` |
-| `05_integration_tester.md` | Integrations Tester | `integration_test_report.md` |
-| `06_system_tester.md` | System Tester | `system_test_report.md` |
-| `07_reviewer.md` | Reviewer | `review_[phase].md` |
+| Datei | Rolle | Prefix | Artefakt |
+|-------|-------|--------|----------|
+| `00_orchestrator.md` | PM & Workflow-Controller | `**PM**` | `00_status.md` |
+| `01_requirements.md` | Requirements Engineer | `**Requirements Engineer**` | `requirements.md` |
+| `02_architect.md` | Software Architect | `**Architekt**` | `architecture.md` |
+| `03_developer.md` | Developer | `**Developer**` | Code + `implementation_notes.md` |
+| `04_unit_tester.md` | Unit Tester | `**Unit Tester**` | `unit_test_report.md` |
+| `05_integration_tester.md` | Integrations Tester | `**Integrationstester**` | `integration_test_report.md` |
+| `06_system_tester.md` | System Tester | `**Systemtester**` | `system_test_report.md` |
+| `07_reviewer.md` | Reviewer | `**Reviewer**` | `review_[phase].md` |
+| `08_kaizen.md` | Kaizen / Prozessoptimierer | `**Kaizen**` | `logs/kaizen_report.md` |
+
+Außerhalb aller Rollen: `**Claude**`
+
+---
+
+## Globale Konventionen
+
+`CONVENTIONS.md` enthält projektagnostische Regeln die für alle Rollen gelten — insbesondere den Rollen-Prefix. Der Orchestrator lädt diese Datei bei der Initialisierung. Dadurch gelten die Konventionen auf jedem Rechner sobald das Submodule geladen ist, unabhängig von der projektspezifischen `CLAUDE.md`.
+
+---
+
+## Rollen-Tagebücher (Kaizen-Input)
+
+Jede Rolle schreibt nach ihrem Einsatz einen kurzen Eintrag in ihr Tagebuch unter `.claude/artifacts/logs/`. Der Kaizen-Prozessoptimierer liest diese Logs vor jedem Release und destilliert daraus Verbesserungen:
+
+- **Produkt-Findings** → bleiben im Projekt-Repo (projektspezifisch)
+- **Prozess-Verbesserungen** → fließen als Änderungen in die Skill-Dateien zurück (projektagnostisch)
 
 ---
 
@@ -100,7 +121,15 @@ Die `CLAUDE.md` enthält:
 - Projektspezifische Regeln (Stopp-Pflichten, Sicherheitsregeln)
 - Den V-Modell Kommando-Block (bereits im Template enthalten)
 
-### 4. Submodule aktuell halten
+### 4. Log-Verzeichnis anlegen
+
+```bash
+mkdir -p .claude/artifacts/logs
+```
+
+Für jede Rolle eine Log-Datei anlegen (siehe `templates/`).
+
+### 5. Submodule aktuell halten
 
 ```bash
 # Framework-Updates in alle Projekte übernehmen
@@ -119,7 +148,7 @@ git commit -m "chore: update vmodel-framework"
 @vmodel CSV-Export
 ```
 
-Der Orchestrator liest `project.md` und `CLAUDE.md`, legt `.claude/artifacts/00_status.md` an und startet Phase 01.
+Der Orchestrator lädt `CONVENTIONS.md`, `project.md` und `CLAUDE.md`, legt `.claude/artifacts/00_status.md` an und startet Phase 01.
 
 ### Direkt in eine Phase einsteigen
 
@@ -127,6 +156,7 @@ Der Orchestrator liest `project.md` und `CLAUDE.md`, legt `.claude/artifacts/00_
 @arch CSV-Export        # setzt vorhandenes requirements.md voraus
 @dev                    # setzt requirements.md + architecture.md voraus
 @review                 # reviewed das zuletzt produzierte Artefakt
+@kaizen                 # Retrospektive vor Release
 ```
 
 ### Status prüfen
@@ -156,15 +186,16 @@ echo $ANTHROPIC_API_KEY   # sollte leer sein für Abo-Nutzung
 ```
 vmodel-framework/
 ├── README.md
-├── skills/
-│   ├── 00_orchestrator.md
-│   ├── 01_requirements.md
-│   ├── 02_architect.md
-│   ├── 03_developer.md
-│   ├── 04_unit_tester.md
-│   ├── 05_integration_tester.md
-│   ├── 06_system_tester.md
-│   └── 07_reviewer.md
+├── CONVENTIONS.md          ← Globale Konventionen (Rollen-Prefix etc.)
+├── 00_orchestrator.md
+├── 01_requirements.md
+├── 02_architect.md
+├── 03_developer.md
+├── 04_unit_tester.md
+├── 05_integration_tester.md
+├── 06_system_tester.md
+├── 07_reviewer.md
+├── 08_kaizen.md
 └── templates/
     ├── project.md.template
     └── CLAUDE.md.template
