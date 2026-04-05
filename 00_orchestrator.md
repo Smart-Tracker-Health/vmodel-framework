@@ -21,14 +21,25 @@ Lies in dieser Reihenfolge:
 - `CLAUDE.md` → Projektspezifische Entwicklungsregeln
 - `.claude/artifacts/00_status.md` → aktueller Workflow-Status (falls vorhanden)
 
-### 2. Status prüfen
+### 2. Log-Verzeichnis sicherstellen
+
+Prüfe ob `.claude/artifacts/logs/` mit allen 8 Log-Dateien existiert.
+Falls nicht (neues Projekt oder neuer Rechner):
+
+```bash
+bash .claude/skills/templates/setup_logs.sh
+```
+
+Danach kurz bestätigen: "Log-Verzeichnis eingerichtet." — kein weiterer Overhead.
+
+### 3. Status prüfen
 Falls `.claude/artifacts/00_status.md` existiert:
 - Zeige den aktuellen Stand an
 - Frage ob weitergemacht oder neu gestartet werden soll
 
 Falls nicht vorhanden: Neues Feature, Status-Datei anlegen.
 
-### 3. Status-Datei initialisieren
+### 4. Status-Datei initialisieren
 Erstelle / aktualisiere `.claude/artifacts/00_status.md`:
 
 ```markdown
