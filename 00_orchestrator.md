@@ -140,6 +140,22 @@ Wenn Phase 06 (System Tester) mit Freigabe abgeschlossen ist:
 
 ---
 
+## Kaizen vor Release
+
+Vor jedem Release triggerst du automatisch den Kaizen-Prozessoptimierer:
+
+```
+@kaizen
+```
+
+Der Kaizen-Skill (`08_kaizen.md`) liest alle Rollen-Tagebücher aus
+`.claude/artifacts/logs/` und erstellt einen Retrospektive-Report.
+
+**Rollen-Tagebücher pflegen:** Erinnere jede Rolle am Ende ihres Einsatzes
+kurz einen Eintrag ins eigene Log zu schreiben (`.claude/artifacts/logs/<rolle>_log.md`).
+
+---
+
 ## Eskalation & Blockaden
 
 Falls eine Phase nicht abgeschlossen werden kann (z.B. widersprüchliche Requirements,
