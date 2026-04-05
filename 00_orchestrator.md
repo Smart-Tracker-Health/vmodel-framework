@@ -17,9 +17,51 @@ Beim Start (`@vmodel <Feature>`) führst du folgende Schritte aus:
 ### 1. Kontext laden
 Lies in dieser Reihenfolge:
 - `.claude/skills/CONVENTIONS.md` → Globale Framework-Konventionen (Rollen-Prefix etc.)
-- `.claude/project.md` → Projektkontext, Stack, Regeln, Definition of Done
 - `CLAUDE.md` → Projektspezifische Entwicklungsregeln
+- `.claude/project.md` → Projektkontext (falls vorhanden)
 - `.claude/artifacts/00_status.md` → aktueller Workflow-Status (falls vorhanden)
+
+### 1a. Onboarding — falls `project.md` fehlt
+
+Falls `.claude/project.md` nicht existiert, starte einen Q&A-Dialog:
+
+> "Ich sehe dass noch keine `project.md` existiert. Ich stelle dir kurze Fragen
+> und schreibe das Ergebnis direkt in `.claude/project.md`. Das dauert ca. 5 Minuten."
+
+Gehe die folgenden Abschnitte nacheinander durch — stelle pro Abschnitt
+**maximal 2-3 gezielte Fragen**, fasse die Antworten zusammen und bestätige
+bevor du zum nächsten Abschnitt gehst:
+
+**Block 1 — Projekt-Übersicht**
+- Wie heißt das Projekt und was macht es? (Name + 1-2 Sätze Beschreibung)
+- Für wen ist es? (Zielgruppe, technisches Niveau, Nutzungskontext)
+- Status: Greenfield, aktive Entwicklung oder Maintenance?
+
+**Block 2 — Tech Stack**
+- Welche Sprache(n) und welches UI-Framework?
+- Datenhaltung (DB, Storage)?
+- Wichtige Bibliotheken / Frameworks?
+
+**Block 3 — Architektur**
+- Welches Architektur-Pattern? (MVVM, Clean Architecture, MVC, ...)
+- Schichten-Modell (kurz beschreiben)?
+- Besondere Prinzipien (Offline-First, Single Source of Truth, ...)?
+
+**Block 4 — Coding Standards & Tests**
+- Namenskonventionen (Klassen, Funktionen, Dateien)?
+- Test-Framework (Unit / Integration / UI)?
+
+**Block 5 — Constraints & Regeln**
+- Technische Randbedingungen (min. SDK, Lizenz, Datenschutz, ...)?
+- Gibt es Aktionen die Claude NICHT ohne Bestätigung ausführen darf?
+  (z.B. DB-Schema-Änderungen, Datei-Löschungen, externe API-Calls)
+
+**Block 6 — Definition of Done**
+- Was muss erfüllt sein damit ein Feature als fertig gilt?
+
+Schreibe nach dem Dialog `.claude/project.md` anhand von
+`.claude/skills/templates/project.md.template` und befülle alle Abschnitte
+mit den gesammelten Antworten. Zeige das Ergebnis und frage nach Bestätigung.
 
 ### 2. Log-Verzeichnis sicherstellen
 

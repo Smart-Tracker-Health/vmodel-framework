@@ -80,3 +80,8 @@ Skill-Dateien: `.claude/skills/` (Submodule → vmodel-framework)
 
 Ja: Neues Feature mit nicht-trivialer Architektur, Breaking Changes, mehrere Schichten betroffen.
 Nein: Bugfixes, einfache UI-Anpassungen, Konfigurationsänderungen — direkt coden.
+
+## Onboarding
+
+Falls `.claude/project.md` nicht existiert, startet der Orchestrator beim ersten
+`@vmodel`-Aufruf automatisch einen Q&A-Dialog und erstellt die Datei.
