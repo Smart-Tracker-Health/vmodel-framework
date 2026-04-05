@@ -121,22 +121,9 @@ Die `CLAUDE.md` enthält:
 - Projektspezifische Regeln (Stopp-Pflichten, Sicherheitsregeln)
 - Den V-Modell Kommando-Block (bereits im Template enthalten)
 
-### 4. Log-Verzeichnis anlegen
+### 4. Fertig
 
-Setup-Script ausführen — legt alle 8 Rollen-Tagebücher automatisch an:
-
-```bash
-chmod +x .claude/skills/templates/setup_logs.sh
-./.claude/skills/templates/setup_logs.sh
-```
-
-Das Script erzeugt `.claude/artifacts/logs/` mit je einer Log-Datei pro Rolle.
-Danach committen:
-
-```bash
-git add .claude/artifacts/logs
-git commit -m "chore: init kaizen role logs"
-```
+Das Log-Verzeichnis (`.claude/artifacts/logs/`) wird beim ersten `@vmodel`-Aufruf automatisch vom Orchestrator angelegt — kein manueller Schritt nötig.
 
 ### 5. Submodule aktuell halten
 
