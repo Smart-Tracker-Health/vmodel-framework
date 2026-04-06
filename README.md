@@ -92,7 +92,11 @@ git submodule update --init
 
 ### 2. Projektkontext anlegen
 
-Template kopieren und ausfüllen:
+`project.md` wird **automatisch** angelegt: Beim ersten `@vmodel`-Aufruf startet der
+Orchestrator einen Q&A-Dialog (6 Blöcke, ca. 5 Minuten) und schreibt das Ergebnis
+direkt in `.claude/project.md`.
+
+Alternativ manuell aus dem Template:
 
 ```bash
 cp .claude/skills/templates/project.md.template .claude/project.md
@@ -104,8 +108,6 @@ Die `project.md` beschreibt:
 - Test-Framework
 - Projektspezifische Constraints
 - Definition of Done
-
-Etwa 15–30 Minuten einmalige Arbeit pro Projekt.
 
 ### 3. CLAUDE.md anlegen
 
@@ -123,7 +125,9 @@ Die `CLAUDE.md` enthält:
 
 ### 4. Fertig
 
-Das Log-Verzeichnis (`.claude/artifacts/logs/`) wird beim ersten `@vmodel`-Aufruf automatisch vom Orchestrator angelegt — kein manueller Schritt nötig.
+Beim ersten `@vmodel`-Aufruf erledigt der Orchestrator automatisch:
+- Q&A-Dialog → `project.md` anlegen (falls nicht vorhanden)
+- Log-Verzeichnis `.claude/artifacts/logs/` mit 8 Rollen-Tagebüchern anlegen
 
 ### 5. Submodule aktuell halten
 
@@ -182,7 +186,7 @@ echo $ANTHROPIC_API_KEY   # sollte leer sein für Abo-Nutzung
 ```
 vmodel-framework/
 ├── README.md
-├── CONVENTIONS.md          ← Globale Konventionen (Rollen-Prefix etc.)
+├── CONVENTIONS.md              ← Globale Konventionen (Rollen-Prefix etc.)
 ├── 00_orchestrator.md
 ├── 01_requirements.md
 ├── 02_architect.md
@@ -193,8 +197,10 @@ vmodel-framework/
 ├── 07_reviewer.md
 ├── 08_kaizen.md
 └── templates/
-    ├── project.md.template
-    └── CLAUDE.md.template
+    ├── project.md.template     ← Vorlage für project.md (auch Onboarding-Basis)
+    ├── CLAUDE.md.template      ← Vorlage für CLAUDE.md
+    ├── role_log.md.template    ← Vorlage für Rollen-Tagebücher
+    └── setup_logs.sh           ← Legt alle 8 Log-Dateien an (auto via Orchestrator)
 ```
 
 ---
