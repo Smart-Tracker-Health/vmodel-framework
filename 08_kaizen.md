@@ -71,6 +71,51 @@ Fasse am Ende zusammen:
 
 ---
 
+## Debugging-Muster dokumentieren
+
+Wenn ein Test-Failure mehrere Sessions und mehrere Ansätze erfordert, ist das ein
+**High-Impact-Finding** für Kaizen — unabhängig davon ob der Fehler letztendlich behoben wird.
+
+### Wann dokumentieren?
+
+Wenn eines dieser Muster auftritt:
+- Ein Testfehler erfordert mehr als 2 Lösungsansätze
+- Die Ursache liegt im Framework (nicht im Produktcode)
+- Der Fix ist nicht intuitiv (würde ohne Dokumentation wiederkehren)
+
+### Was dokumentieren?
+
+Nicht nur die Lösung — den **Diagnose-Pfad**:
+
+```markdown
+## Debugging-Incident: [kurze Beschreibung]
+
+**Symptom:** [Fehlermeldung + Kontext]
+**Erstes Auftreten:** [Testname / Phase]
+
+### Ausgeschlossene Hypothesen
+1. [Hypothese A] → widerlegt durch [Beobachtung]
+2. [Hypothese B] → widerlegt durch [Beobachtung]
+
+### Root Cause
+[Eigentliche Ursache — Framework-Bug, API-Missverständnis, etc.]
+
+### Lösung
+[Konkreter Fix mit Code-Snippet wenn relevant]
+
+### Prozess-Konsequenz
+→ Skill [XX_name.md] aktualisiert: [was wurde hinzugefügt]
+```
+
+### Wo dokumentieren?
+
+- **Sofort:** Im betroffenen Skill (projektagnostisch formuliert) — damit die Lösung die nächste
+  Session überdauert
+- **Im Kaizen-Report:** Als Finding mit Kategorie "Framework-Wissen" oder "Test-Infrastruktur"
+- **Nicht in Memory:** Memory verfällt — Skills sind versioniert und persistent
+
+---
+
 ## Qualitätskriterien
 
 - Jede Finding hat eine **Ursache** (nicht nur Symptom beschreiben)

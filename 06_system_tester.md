@@ -109,6 +109,35 @@ Aus requirements.md → NFA ableiten:
 
 ---
 
+## UI Testing — Semantics/Accessibility Tree vs. direkte Gesten
+
+### Problem: Klick trifft Node, State ändert sich nicht
+
+**Symptom:** Ein Test findet das Element korrekt (kein "node not found"), der Klick feuert,
+aber der erwartete Zustand tritt nicht ein → `waitUntil`-Timeout.
+
+**Ursache:** Viele UI-Frameworks mergen bei komplexen interaktiven Widgets (z. B. Toggle-Zeile
+die aus Container + Switch besteht) den Accessibility-Tree. Der Klick via Semantics-Selektor
+trifft den zusammengefassten Node, aber der eigentliche Handler des Child-Widgets wird dabei
+nicht zuverlässig ausgelöst.
+
+**Diagnosepfad:**
+
+1. `Exception: node not found` → Selektor falsch → Selektor anpassen
+2. Kein Exception, aber State ändert sich nicht → Tree-Merging-Problem
+   → Fallback: direkte Gesten-Eingabe an den physischen Koordinaten des Widgets
+
+**Grundregel:**
+- **State lesen:** Wenn möglich den ungemergten / raw Accessibility-Tree verwenden — dort
+  hat jedes Widget seinen eigenen Node mit eigenem State.
+- **State setzen (Fallback):** Direkte Touch-/Maus-Eingabe an den Koordinaten des Widgets
+  umgeht Semantics-Struktur vollständig und ist für Klick-Auslöser zuverlässiger.
+
+Die konkrete API-Implementierung (Framework-spezifisch) gehört in die projektspezifische
+Test-Dokumentation — nicht in diesen Skill.
+
+---
+
 ## Abnahme-Checkliste (aus Definition of Done)
 
 Aus `project.md` → Definition of Done übernehmen:
