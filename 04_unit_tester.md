@@ -74,8 +74,10 @@ Erstelle vor dem Schreiben eine Mapping-Tabelle:
 - [ ] Tests sind unabhängig (Reihenfolge irrelevant)
 - [ ] Keine Logik im Test selbst (kein if/loop im Test-Code)
 - [ ] Testname beschreibt was getestet wird, nicht wie
+- [ ] **Keine ungenutzten Imports** — alle `import`-Zeilen werden von mindestens einer Test-Methode verwendet
 - [ ] Spalte "Unit Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
 - [ ] Neue Testklasse in Tabelle "Unit-Test-Implementierungsstand" eingetragen (Klasse, Anzahl Tests, Test-IDs, Req-IDs, Status ⚠️)
+- [ ] Gesamt-Zähler in `traceability_matrix.md` und `00_status.md` auf neue Testzahl aktualisiert
 
 ---
 
@@ -111,6 +113,22 @@ Schreibe nach: `.claude/artifacts/unit_test_report.md`
 
 ---
 
+## Rollen-Tagebuch (Pflicht)
+
+Schreibe **vor dem Abschluss** einen Eintrag in `.claude/artifacts/logs/unit_tester_log.md`:
+
+```markdown
+## YYYY-MM-DD | Feature: <Name> | Release: <Version>
+- <Was war unklar oder schwierig?>
+- <Was würde ich nächstes Mal anders machen?>
+- <Was lief besonders gut?>
+```
+
+Wenn es nichts Auffälliges gab: einen kurzen Satz genügt.
+Leere Logs sind für den Kaizen-Prozessoptimierer wertlos.
+
+---
+
 ## Abschluss
 
 ```
@@ -118,6 +136,8 @@ Schreibe nach: `.claude/artifacts/unit_test_report.md`
 ✅ Phase 04 — Unit Tests abgeschlossen
    [X] Tests geschrieben
    [X] Requirements-Abdeckung dokumentiert
+   [X] Traceability Matrix + 00_status.md aktualisiert
+   [X] Rollen-Tagebuch eingetragen
 
 Optionen:
   W) Weiter zu Phase 05: Integrationstests

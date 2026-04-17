@@ -159,6 +159,7 @@ Aus `project.md` → Definition of Done übernehmen:
 - [ ] Definition of Done aus project.md vollständig geprüft
 - [ ] Spalte "System Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
 - [ ] Neue Testklasse in Tabelle "System-Test-Implementierungsstand" eingetragen (Klasse, Anzahl Tests, ST-IDs, Status ⚠️)
+- [ ] Gesamt-Zähler in `traceability_matrix.md` und `00_status.md` auf neue Testzahl aktualisiert
 
 ---
 
@@ -199,11 +200,29 @@ Schreibe nach: `.claude/artifacts/system_test_report.md`
 
 ---
 
+## Rollen-Tagebuch (Pflicht)
+
+Schreibe **vor dem Abschluss** einen Eintrag in `.claude/artifacts/logs/system_tester_log.md`:
+
+```markdown
+## YYYY-MM-DD | Feature: <Name> | Release: <Version>
+- <Was war unklar oder schwierig?>
+- <Was würde ich nächstes Mal anders machen?>
+- <Was lief besonders gut?>
+```
+
+Wenn es nichts Auffälliges gab: einen kurzen Satz genügt.
+Leere Logs sind für den Kaizen-Prozessoptimierer wertlos.
+
+---
+
 ## Abschluss
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Phase 06 — Systemtest abgeschlossen
+   [X] Traceability Matrix + 00_status.md aktualisiert
+   [X] Rollen-Tagebuch eingetragen
 
 Optionen:
   F) Freigabe — Feature abgeschlossen

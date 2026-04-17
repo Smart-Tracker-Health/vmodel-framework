@@ -241,8 +241,8 @@ Keine Blockade. Wird dokumentiert, kein Zwang zur sofortigen Behebung.
 
 ## Artefakt
 
-Schreibe nach: `.claude/artifacts/review_[phase].md`
-(z.B. `review_01_requirements.md`, `review_03_code.md`)
+Schreibe nach: `.claude/artifacts/reviews/review_[phase].md`
+(z.B. `reviews/review_01_requirements.md`, `reviews/review_03_code.md`)
 
 ```markdown
 # Review: [Phase] — [Feature-Name]
@@ -271,11 +271,28 @@ Schreibe nach: `.claude/artifacts/review_[phase].md`
 
 ---
 
+## Rollen-Tagebuch (Pflicht)
+
+Schreibe **vor dem Abschluss** einen Eintrag in `.claude/artifacts/logs/reviewer_log.md`:
+
+```markdown
+## YYYY-MM-DD | Feature: <Name> | Phase: <Phase> | Release: <Version>
+- <Was war unklar oder schwierig?>
+- <Muster die mir über mehrere Reviews auffallen?>
+- <Was lief besonders gut?>
+```
+
+Wenn es nichts Auffälliges gab: einen kurzen Satz genügt.
+Leere Logs sind für den Kaizen-Prozessoptimierer wertlos.
+
+---
+
 ## Abschluss
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [✅/⚠️/❌] Review abgeschlossen — [Ergebnis]
+   [X] Rollen-Tagebuch eingetragen
 
 ✅ Nur Minor-Befunde → W) Weiter zur nächsten Phase
 ⚠️ Major-Befunde    → Ä) Auflagen einarbeiten, dann weiter

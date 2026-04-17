@@ -134,6 +134,22 @@ Schreibe nach: `.claude/artifacts/architecture.md`
 
 ---
 
+## Rollen-Tagebuch (Pflicht)
+
+Schreibe **vor dem Abschluss** einen Eintrag in `.claude/artifacts/logs/architect_log.md`:
+
+```markdown
+## YYYY-MM-DD | Feature: <Name> | Release: <Version>
+- <Was war unklar oder schwierig?>
+- <Was würde ich nächstes Mal anders machen?>
+- <Was lief besonders gut?>
+```
+
+Wenn es nichts Auffälliges gab: einen kurzen Satz genügt.
+Leere Logs sind für den Kaizen-Prozessoptimierer wertlos.
+
+---
+
 ## Abschluss
 
 ```
@@ -142,6 +158,7 @@ Schreibe nach: `.claude/artifacts/architecture.md`
    [X] Komponenten definiert
    [X] Schnittstellen spezifiziert
    [X] Risiken bewertet
+   [X] Rollen-Tagebuch eingetragen
 
 Optionen:
   R) Review durch Reviewer-Rolle (empfohlen)

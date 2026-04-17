@@ -18,11 +18,26 @@ Wird vom PM (`00_orchestrator.md`) vor jedem Release getriggert: `@kaizen`
 
 ## Initialisierung
 
-Lies in dieser Reihenfolge:
+### Checkpoint laden
+Prüfe ob `.claude/artifacts/logs/kaizen_checkpoint.md` existiert.
+- **Existiert:** Lies das Datum des letzten Laufs. Lese in den Log-Dateien nur Einträge **nach** diesem Datum.
+- **Existiert nicht:** Erster Lauf — alle Einträge lesen.
+
+### Dateien lesen
 1. `.claude/project.md` → Projektkontext
-2. `.claude/artifacts/logs/*.md` → alle Rollen-Tagebücher
-3. `.claude/artifacts/review_all_phases.md` → letzter Review-Report
+2. `.claude/artifacts/logs/*.md` → Rollen-Tagebücher (nur neue Einträge seit Checkpoint)
+3. `.claude/artifacts/logs/user_log.md` → Nutzer-Ideen (nur neue Einträge seit Checkpoint)
 4. `.claude/artifacts/00_status.md` → abgeschlossene Features dieses Release-Zyklus
+5. Review-Artefakte des aktuellen Release-Zyklus (`.claude/artifacts/reviews/review_*_f[XX].md` o.ä.)
+
+### Checkpoint schreiben (am Ende)
+Schreibe/aktualisiere `.claude/artifacts/logs/kaizen_checkpoint.md`:
+```markdown
+# Kaizen Checkpoint
+**Letzter Lauf:** YYYY-MM-DD
+**Gelesene Logs bis:** YYYY-MM-DD
+```
+So liest der nächste Kaizen-Lauf nur neue Einträge.
 
 ---
 
@@ -41,6 +56,30 @@ Erstelle oder aktualisiere `.claude/artifacts/logs/kaizen_report.md`:
 
 ```markdown
 ## Release: <Version> | Datum: YYYY-MM-DD
+
+### KPI-Trend
+
+**Review-Findings-Trend** — aus den Review-Artefakten dieses Releases ablesen.
+Alle Findings zählen, egal ob behoben oder offen — nur so werden wiederkehrende Muster sichtbar.
+| Phase | Kritisch | Major | Minor |
+|-------|---------|-------|-------|
+| 01 Requirements | ? | ? | ? |
+| 02 Architektur  | ? | ? | ? |
+| 03 Code         | ? | ? | ? |
+| 04 Unit Tests   | ? | ? | ? |
+| 05 Integration  | ? | ? | ? |
+| 06 System Tests | ? | ? | ? |
+| **Gesamt**      | **?** | **?** | **?** |
+
+Vergleich Vorrelease: Major war [N] → jetzt [N] ([+/-N])
+Muster-Check: Welche Phase hat wiederholt hohe Finding-Zahlen? → Dort ansetzen.
+
+**FA-Abdeckungs-Trend** — aus `traceability_matrix.md` Coverage-Zusammenfassung:
+| | Gesamt | ✅ | ⚠️ | ❌ |
+|-|--------|---|---|---|
+| Dieses Release  | ? | ? | ? | ? |
+| Vorheriges Release | ? | ? | ? | ? |
+| Δ ❌            | | | | **[+/-N]** |
 
 ### Produkt-Verbesserungen (Backlog)
 - [ ] <konkreter Verbesserungsvorschlag mit Begründung>
@@ -133,3 +172,44 @@ Nicht nur die Lösung — den **Diagnose-Pfad**:
 | Findet Fehler im Output | Findet Schwächen im Prozess |
 | Gibt Pass/Fail | Gibt Verbesserungsempfehlungen |
 | Läuft nach jeder Phase | Läuft vor jedem Release |
+
+---
+
+## Rollen-Tagebuch (Pflicht)
+
+Schreibe **vor dem Abschluss** einen Eintrag in `.claude/artifacts/logs/kaizen_log.md`
+(neu anlegen falls nicht vorhanden — Format wie andere Rollen-Tagebücher):
+
+```markdown
+## YYYY-MM-DD | Release: <Version>
+- <Welche Prozess-Verbesserungen haben gewirkt? (Vergleich zu letztem Lauf)>
+- <Welche Findings waren diesmal besonders auffällig?>
+- <Was war schwierig zu beurteilen / wo fehlte Material?>
+- <Empfehlung für den nächsten Kaizen-Lauf>
+```
+
+**Besonderer Wert dieses Logs:** Kaizen blickt über mehrere Releases. Nur hier lässt sich
+festhalten ob Prozess-Änderungen tatsächlich gewirkt haben — oder ob dieselben Probleme
+immer wieder auftauchen.
+
+---
+
+## Abschluss
+
+Nach Fertigstellung des Kaizen-Reports:
+1. Rollen-Tagebuch eintragen (`kaizen_log.md`)
+2. Checkpoint aktualisieren (`.claude/artifacts/logs/kaizen_checkpoint.md`)
+3. Offene Diskussionspunkte explizit ansprechen
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Kaizen abgeschlossen
+   [X] Produkt-Findings: [N]
+   [X] Prozess-Verbesserungen: [N] (Skills aktualisiert)
+   [X] Rollen-Tagebuch eingetragen (kaizen_log.md)
+   [X] Checkpoint gesetzt: YYYY-MM-DD
+
+⚠️  Offene Diskussionspunkte: [N]
+   → [Thema 1]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```

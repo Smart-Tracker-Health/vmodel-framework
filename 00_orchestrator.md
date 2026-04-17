@@ -121,20 +121,82 @@ Erstelle / aktualisiere `.claude/artifacts/00_status.md`:
 ### Normale Reihenfolge
 ```
 01 Requirements → [Review 01] → 02 Architect → [Review 02] → 03 Developer → [Review 03]
-→ 04 Unit Tester → [Review 04] → 05 Integration Tester → [Review 05]
+→ [UAT-Gate] →
+04 Unit Tester → [Review 04] → 05 Integration Tester → [Review 05]
 → 06 System Tester → [Review 06] → ✅ Abschluss
 ```
 
-### Nach jeder Phase
-1. Status-Datei aktualisieren (Phase auf ✅ Abgeschlossen setzen)
-2. **Review anbieten** — nach JEDER Phase (01–06), nicht nur nach den ersten drei
-3. Nächste Schritte klar kommunizieren
-4. Auf Bestätigung warten — **niemals automatisch zur nächsten Phase**
+### Automatischer Workflow-Modus
+
+Der Standard-Modus ist vollautomatisch. Der Nutzer wird nur an drei Stellen unterbrochen:
+1. **UAT-Gate** (nach Phase 03) — Nutzer prüft das Feature, gibt Freigabe oder fordert Korrekturen
+2. **Session-Checkpoint** — wenn Kontext hoch ausgelastet ist (nach jeder Phase, s.u.)
+3. **Blockaden** (kritische Befunde, DB-Migrationen, technische Risiken)
+
+**Linke V-Seite (vollautomatisch):**
+```
+01 Requirements → Review → [Kritisch/Major einarbeiten] →
+02 Architektur  → Review → [Kritisch/Major einarbeiten] →
+03 Code         → Review → [Kritisch/Major einarbeiten] →
+→ UAT-Gate
+```
+
+**UAT-Gate:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 UAT-Gate — Linke V-Seite abgeschlossen
+   Feature: [Name]
+   Bitte das Feature prüfen und Feedback geben.
+   J) Freigabe → weiter mit Phase 04 (Unit Tests)
+   K) Korrekturen nötig → zurück zu Phase [01/02/03]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+→ Warten auf Bestätigung. Korrekturen: Schleife bis Nutzer freigibt.
+
+**Rechte V-Seite (vollautomatisch nach UAT):**
+```
+04 Unit Tests      → Review → [Kritisch/Major einarbeiten] →
+05 Integration     → Review → [Kritisch/Major einarbeiten] →
+06 System Tests    → Review → [Kritisch/Major einarbeiten] →
+→ ✅ Abschluss
+```
+
+### Umgang mit Review-Befunden
+
+| Schwere | Verhalten |
+|---------|-----------|
+| Kritisch ❌ | Sofort einarbeiten. Phase wiederholen. |
+| Major ⚠️ | Einarbeiten, dann automatisch weiter. |
+| Minor ✅ | **Nicht einarbeiten.** In `minor_backlog.md` vormerken. Kein Stopp. |
+
+**Minor-Backlog:** Schreibe Minor-Befunde nach `.claude/artifacts/minor_backlog.md` (append):
+```markdown
+## YYYY-MM-DD | Phase [X] | Feature: [Name]
+- [m-01] [Befund] — [Empfehlung]
+```
+
+### Session-Checkpoint
+
+Nach jeder abgeschlossenen Phase (auch im Auto-Modus):
+1. Fortschritt im Abschluss-Banner anzeigen
+2. Kurz prüfen: Ist der Kontext stark angewachsen (viele große Dateien gelesen, langer Verlauf)?
+3. Falls ja: Checkpoint ausgeben und auf Bestätigung warten:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️  Session-Checkpoint
+    Phase [X] abgeschlossen. Kontext-Auslastung hoch.
+    Nächste Phase: [Y — Beschreibung]
+    J) Weiter   N) Pause — jetzt beenden
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+> **Warum:** Lange automatisierte Läufe können mehrere Sessions verbrauchen.
+> Der Nutzer soll bewusst entscheiden ob er fortfährt, statt unbemerkt Kosten zu verursachen.
 
 ### Review-Entscheidung
 Reviews sind **Pflicht** nach Phase 01, 02, 03 (Anforderungen, Architektur, Code).
-Reviews sind **empfohlen** nach Phase 04, 05, 06 (Unit Tests, Integrations-, Systemtests).
-Der Nutzer kann sie überspringen mit `W` (Weiter) oder explizit anfordern mit `R` (Review).
+Reviews sind **Pflicht** nach Phase 04, 05, 06 im Auto-Modus — Befunde werden automatisch eingearbeitet.
 
 > **Warum Reviews bei Testphasen?**
 > Testfehler wie fehlende Boundary-Value-Tests werden nur durch Review entdeckt —
@@ -178,7 +240,8 @@ Dann liest du die zugehörige Skill-Datei und übernimmst die Rolle vollständig
 Wenn Phase 06 (System Tester) mit Freigabe abgeschlossen ist:
 
 1. Status-Datei final aktualisieren (alle Phasen ✅)
-2. Abschluss-Zusammenfassung ausgeben:
+2. Roadmap aktualisieren (s.u.)
+3. Abschluss-Zusammenfassung ausgeben:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -191,6 +254,28 @@ Wenn Phase 06 (System Tester) mit Freigabe abgeschlossen ist:
    System Test:        ✅  | Review 06: ✅
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+
+### Roadmap-Pflege nach Abschluss
+
+Nach jedem abgeschlossenen Feature `.claude/artifacts/roadmap.md` aktualisieren:
+
+1. **Status** der Feature-Zeile auf `✅` setzen
+2. **PM-Nachbewertung** eintragen:
+   - Tatsächlicher Aufwand (1–10) — Vergleich mit ursprünglicher Schätzung
+   - Abweichung kurz kommentieren (was war anders als erwartet?)
+   - Ungefähre Token-Anzahl der Implementierungssession(en) als objektive Referenz
+
+**Format** (Spalte "PM-Nachbewertung"):
+```
+tatsächlich: ~X · [kurze Begründung der Abweichung] · Token: ~NNNk
+```
+
+**Wo die Token-Zahl ablesen?** Claude Code zeigt am Ende einer Session die verbrauchten
+Token an (Kontext-Auslastung). Alternativ: Claude.ai zeigt Token-Verbrauch im Header.
+Falls nicht ablesbar: Schätzung anhand der Session-Komplexität (kurz = ~50k, mittel = ~150k, lang = ~300k+).
+
+**Warum:** Die PM-Nachbewertung ist die einzige objektive Lernschleife für Aufwandsschätzungen.
+Ohne sie wiederholen sich Über- oder Unterschätzungen in jedem Release.
 
 ---
 

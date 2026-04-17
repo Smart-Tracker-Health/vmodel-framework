@@ -110,12 +110,29 @@ Aber: Erstelle/aktualisiere `.claude/artifacts/implementation_notes.md` mit:
 
 ---
 
+## Rollen-Tagebuch (Pflicht)
+
+Schreibe **vor dem Abschluss** einen Eintrag in `.claude/artifacts/logs/developer_log.md`:
+
+```markdown
+## YYYY-MM-DD | Feature: <Name> | Release: <Version>
+- <Was war unklar oder schwierig?>
+- <Was würde ich nächstes Mal anders machen?>
+- <Was lief besonders gut?>
+```
+
+Wenn es nichts Auffälliges gab: einen kurzen Satz genügt.
+Leere Logs sind für den Kaizen-Prozessoptimierer wertlos.
+
+---
+
 ## Abschluss
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Phase 03 — Implementierung abgeschlossen
    [X] Dateien erstellt/geändert (siehe implementation_notes.md)
+   [X] Rollen-Tagebuch eingetragen
 
 Optionen:
   R) Code Review durch Reviewer-Rolle (empfohlen)

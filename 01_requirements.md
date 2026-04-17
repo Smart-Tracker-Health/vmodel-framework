@@ -133,6 +133,22 @@ Schreibe nach: `.claude/artifacts/requirements.md`
 
 ---
 
+## Rollen-Tagebuch (Pflicht)
+
+Schreibe **vor dem Abschluss** einen Eintrag in `.claude/artifacts/logs/requirements_log.md`:
+
+```markdown
+## YYYY-MM-DD | Feature: <Name> | Release: <Version>
+- <Was war unklar oder schwierig?>
+- <Was würde ich nächstes Mal anders machen?>
+- <Was lief besonders gut?>
+```
+
+Wenn es nichts Auffälliges gab: einen kurzen Satz genügt.
+Leere Logs sind für den Kaizen-Prozessoptimierer wertlos.
+
+---
+
 ## Abschluss
 
 Kurze Zusammenfassung der wichtigsten Anforderungen ausgeben, dann:
@@ -143,6 +159,7 @@ Kurze Zusammenfassung der wichtigsten Anforderungen ausgeben, dann:
    [X] Funktionale Anforderungen
    [X] Nicht-funktionale Anforderungen
    [X] Randbedingungen
+   [X] Rollen-Tagebuch eingetragen
 
 Optionen:
   R) Review durch Reviewer-Rolle (empfohlen)
