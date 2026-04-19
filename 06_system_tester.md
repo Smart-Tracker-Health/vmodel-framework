@@ -107,6 +107,36 @@ Aus requirements.md → NFA ableiten:
 - 3-5 zentrale bestehende Features kurz prüfen
 - Fokus auf Features die architektonisch nah am neuen Feature sind
 
+### Testlauf-Strategie (androidTest auf Low-Memory-Emulatoren)
+
+Auf Emulatoren mit API ≤ 28 crasht ein vollständiger `connectedAndroidTest`-Lauf
+ab ca. 90 Tests mit OOM. **API 27 bleibt Pflicht** (Min SDK 26 — Rückwärtskompatibilität
+muss auf echten alten Gerätebedingungen verifiziert werden).
+
+**Lösung: Klassen-weise Ausführung in Batches von ~50 Tests:**
+
+```bash
+# Batch 1 — System Tests
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
+de.asthmatracker.ui.system.HomeScreenSystemTest,\
+de.asthmatracker.ui.system.HistorySystemTest,\
+de.asthmatracker.ui.system.ConstraintTest
+
+# Batch 2 — Settings / AppLock / E2E
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
+de.asthmatracker.ui.system.SettingsSystemTest,\
+de.asthmatracker.ui.system.AppLockSystemTest,\
+de.asthmatracker.ui.system.E2EWorkflowTest,\
+de.asthmatracker.ui.system.PdfExporterTest
+
+# Neue Feature-Tests isoliert (z.B. Erinnerungen)
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
+de.asthmatracker.ui.system.ErinnerungenSystemTest
+```
+
+Paketnamen ggf. an tatsächliche Projektstruktur anpassen.
+Faustregel: ≤ 50 Tests pro Lauf auf API 27 Emulator.
+
 ---
 
 ## UI Testing — Semantics/Accessibility Tree vs. direkte Gesten

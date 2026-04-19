@@ -37,6 +37,36 @@ Lies zuerst:
 Aus `project.md` → Test-Framework die Integrationstest-Werkzeuge entnehmen.
 Grundregel: **Echte Implementierungen verwenden wo möglich, aber In-Memory / Test-Doubles statt Produktion.**
 
+### Testlauf-Strategie (androidTest auf Low-Memory-Emulatoren)
+
+Auf Emulatoren mit API ≤ 28 oder wenig RAM crasht ein vollständiger `connectedAndroidTest`-Lauf
+ab ca. 90 Tests mit OOM. **Lösung: Klassen-weise Ausführung in Batches von ~50 Tests.**
+
+```bash
+# Batch 1 — DAO-Tests (ca. 37 Tests)
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
+de.asthmatracker.data.db.PeakFlowDaoTest,\
+de.asthmatracker.data.db.MedicationDaoTest,\
+de.asthmatracker.data.db.MedicationLogDaoTest,\
+de.asthmatracker.data.db.AdditionalMeasureDaoTest,\
+de.asthmatracker.data.db.AdditionalMeasureLogDaoTest
+
+# Batch 2 — Settings / Migration / Repository (ca. 26 Tests)
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
+de.asthmatracker.data.db.UserSettingsDaoTest,\
+de.asthmatracker.data.db.MigrationTest,\
+de.asthmatracker.data.db.RepositoryIntegrationTest,\
+de.asthmatracker.data.db.DiaryEntryDaoTest
+
+# Neue Feature-Tests isoliert (z.B. Reminder)
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
+de.asthmatracker.data.db.ReminderDaoTest
+```
+
+**Warum API 27 behalten?** Min SDK ist 26 — ältere Geräte müssen abgedeckt bleiben.
+API 33+ Emulatoren würden niedrige API-spezifische Bugs übersehen.
+Batching ist die korrekte Lösung — nicht API-Wechsel.
+
 ### Datenmigrations-Tests (falls relevant)
 Falls in Phase 03 Schema-Änderungen durchgeführt wurden:
 - Alten Datensatz anlegen (Version N)
