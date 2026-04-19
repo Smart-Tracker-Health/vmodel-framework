@@ -255,6 +255,28 @@ Wenn Phase 06 (System Tester) mit Freigabe abgeschlossen ist:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
+### Abschluss-Checkliste
+
+Bevor der Workflow als ✅ markiert wird:
+
+```
+□ Alle 6 Review-Artefakte vorhanden?
+  → reviews/review_01_requirements_fXX.md
+  → reviews/review_02_architecture_fXX.md
+  → reviews/review_03_code_fXX.md          ← oft vergessen!
+  → reviews/review_04_unit_tests_fXX.md
+  → reviews/review_05_integration_tests_fXX.md
+  → reviews/review_06_system_tests_fXX.md
+□ Feature-Status in requirements.md auf ✅ gesetzt?
+  → Abschnitt des Features suchen, Status-Zeile aktualisieren
+□ Roadmap aktualisiert (s.u.)?
+```
+
+**Fehlende Review-Artefakte sind kein Blocker** — aber müssen nachgeholt werden
+(kurzes Freigabe-Dokument genügt, wenn Review mündlich/inline stattfand).
+
+---
+
 ### Roadmap-Pflege nach Abschluss
 
 Nach jedem abgeschlossenen Feature `.claude/artifacts/roadmap.md` aktualisieren:

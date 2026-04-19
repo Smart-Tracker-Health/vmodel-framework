@@ -212,6 +212,10 @@ Prüfe `.claude/artifacts/traceability_matrix.md` und `.claude/artifacts/impact_
 - [ ] Status-Tabellen (Unit/Integration/System-Test-Implementierungsstand) aktuell:
   - Nach erfolgreichem Testlauf auf Gerät/Emulator: ⚠️ → ✅ setzen
   - Gesamtzeile der jeweiligen Tabelle ebenfalls aktualisieren
+- [ ] **Coverage-Zusammenfassung am Ende der Matrix neu berechnen** (nach jedem abgeschlossenen Release):
+  - Gesamtzahl aller Req-IDs zählen (FA + NFA + RB)
+  - ✅ / ⚠️ / ❌ neu auszählen
+  - Tabelle `| Kategorie | Gesamt | ✅ | ⚠️ | ❌ |` aktualisieren
 
 ### Impact Map
 - [ ] Neue Dateien aus Phase 03 sind in `impact_map.md` eingetragen
