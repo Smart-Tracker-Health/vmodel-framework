@@ -43,28 +43,27 @@ Auf Emulatoren mit API ≤ 28 oder wenig RAM crasht ein vollständiger `connecte
 ab ca. 90 Tests mit OOM. **Lösung: Klassen-weise Ausführung in Batches von ~50 Tests.**
 
 ```bash
-# Batch 1 — DAO-Tests (ca. 37 Tests)
-./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
-de.asthmatracker.data.db.PeakFlowDaoTest,\
-de.asthmatracker.data.db.MedicationDaoTest,\
-de.asthmatracker.data.db.MedicationLogDaoTest,\
-de.asthmatracker.data.db.AdditionalMeasureDaoTest,\
-de.asthmatracker.data.db.AdditionalMeasureLogDaoTest
+# Batch 1 — erste Gruppe von Testklassen (Beispiel: DAO-Tests)
+./gradlew connectedAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class=\
+  com.example.data.FooDaoTest,com.example.data.BarDaoTest
 
-# Batch 2 — Settings / Migration / Repository (ca. 26 Tests)
-./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
-de.asthmatracker.data.db.UserSettingsDaoTest,\
-de.asthmatracker.data.db.MigrationTest,\
-de.asthmatracker.data.db.RepositoryIntegrationTest,\
-de.asthmatracker.data.db.DiaryEntryDaoTest
+# Batch 2 — zweite Gruppe (Beispiel: Repository / Migration)
+./gradlew connectedAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class=\
+  com.example.data.MigrationTest,com.example.data.RepositoryIntegrationTest
 
-# Neue Feature-Tests isoliert (z.B. Reminder)
-./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
-de.asthmatracker.data.db.ReminderDaoTest
+# Neue Feature-Tests isoliert
+./gradlew connectedAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class=\
+  com.example.data.NewFeatureDaoTest
 ```
 
-**Warum API 27 behalten?** Min SDK ist 26 — ältere Geräte müssen abgedeckt bleiben.
-API 33+ Emulatoren würden niedrige API-spezifische Bugs übersehen.
+Die konkreten Paketnamen und Klassen aus `project.md` entnehmen.
+Faustregel: ≤ 50 Tests pro Batch.
+
+**Warum nicht auf höhere API-Version wechseln?** Min SDK des Projekts bestimmt die
+Test-Ziel-API — ältere API-spezifische Bugs würden auf neueren Emulatoren unentdeckt bleiben.
 Batching ist die korrekte Lösung — nicht API-Wechsel.
 
 ### Datenmigrations-Tests (falls relevant)

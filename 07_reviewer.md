@@ -132,7 +132,7 @@ Prüfe alle Dateien unter `src/androidTest/` die auf `Test` enden (keine UI-Test
 - [ ] Repository-Integrationstest vorhanden (Business-Logik + DAO zusammen)
 
 ### Test-Qualität
-- [ ] Echte Room In-Memory DB verwendet (`Room.inMemoryDatabaseBuilder`)
+- [ ] Echte In-Memory-Datenbank verwendet (kein Mock der DB-Schicht) — Framework-spezifische API aus `project.md` entnehmen
 - [ ] Keine Produktions-Infrastruktur (kein echter Dateipfad)
 - [ ] Jeder Test startet mit sauberem DB-Zustand
 - [ ] **Boundary Value Analysis:** Falls DAOs eigene Logik haben → Grenzen getestet

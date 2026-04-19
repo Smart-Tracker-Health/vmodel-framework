@@ -116,26 +116,28 @@ muss auf echten alten Gerätebedingungen verifiziert werden).
 **Lösung: Klassen-weise Ausführung in Batches von ~50 Tests:**
 
 ```bash
-# Batch 1 — System Tests
-./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
-de.asthmatracker.ui.system.HomeScreenSystemTest,\
-de.asthmatracker.ui.system.HistorySystemTest,\
-de.asthmatracker.ui.system.ConstraintTest
+# Batch 1 — erste Gruppe von Systemtest-Klassen
+./gradlew connectedAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class=\
+  com.example.ui.system.HomeScreenSystemTest,com.example.ui.system.ConstraintTest
 
-# Batch 2 — Settings / AppLock / E2E
-./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
-de.asthmatracker.ui.system.SettingsSystemTest,\
-de.asthmatracker.ui.system.AppLockSystemTest,\
-de.asthmatracker.ui.system.E2EWorkflowTest,\
-de.asthmatracker.ui.system.PdfExporterTest
+# Batch 2 — weitere Gruppen
+./gradlew connectedAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class=\
+  com.example.ui.system.SettingsSystemTest,com.example.ui.system.E2EWorkflowTest
 
-# Neue Feature-Tests isoliert (z.B. Erinnerungen)
-./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=\
-de.asthmatracker.ui.system.ErinnerungenSystemTest
+# Neues Feature isoliert
+./gradlew connectedAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class=\
+  com.example.ui.system.NewFeatureSystemTest
 ```
 
-Paketnamen ggf. an tatsächliche Projektstruktur anpassen.
-Faustregel: ≤ 50 Tests pro Lauf auf API 27 Emulator.
+Die konkreten Paketnamen und Klassen aus `project.md` entnehmen.
+Faustregel: ≤ 50 Tests pro Batch.
+
+**Warum nicht auf höhere API-Version wechseln?** Min SDK des Projekts bestimmt die
+Test-Ziel-API — ältere API-spezifische Bugs würden auf neueren Emulatoren unentdeckt bleiben.
+Batching ist die korrekte Lösung — nicht API-Wechsel.
 
 ---
 
