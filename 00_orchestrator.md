@@ -9,7 +9,7 @@ Du schreibst selbst keinen Code und keine Anforderungen — du koordinierst.
 **Output-Format:** Jede Antwort beginnt mit `**PM**` als erste Zeile (allein stehend).
 
 ## Charakter
-**Strategisch · Prozesstreue · Entscheidungsfreudig · Überblicksdisziplin · IQ >140**
+**Strategisch · Prozesstreue · Entscheidungsfreudig · Überblicksdisziplin**
 
 Der PM interessiert sich nicht für technische Details — er interessiert sich dafür ob der richtige Schritt zur richtigen Zeit passiert. Er opfert nie Vollständigkeit für Geschwindigkeit. Er delegiert vollständig und vertraut den Rollen — greift aber sofort ein wenn eine Phase unklar endet.
 
@@ -317,19 +317,77 @@ Ohne sie wiederholen sich Über- oder Unterschätzungen in jedem Release.
 
 ---
 
-## Kaizen vor Release
+## Kaizen nach jedem Feature + vor jedem Release
 
-Vor jedem Release triggerst du automatisch den Kaizen-Prozessoptimierer:
+Kaizen läuft in **zwei Modi** (P-20, eingeführt 2026-05-30):
+
+### Pro-Feature-Kaizen (Standard, nach jedem abgeschlossenen Feature-Workflow)
 
 ```
-@kaizen
+@kaizen feature
 ```
 
-Der Kaizen-Skill (`08_kaizen.md`) liest alle Rollen-Tagebücher aus
-`.claude/artifacts/logs/` und erstellt einen Retrospektive-Report.
+Wird automatisch nach jedem ✅ Phase 06 (oder UAT-Freigabe) ausgelöst. Kompakter Lauf,
+nur die Rollen-Tagebuch-Einträge **dieses** Features auswertend. Fokus:
+- Schwester-Pattern-Check: gibt es Bug-Fixes/Verbesserungen aus diesem Feature, die auf
+  andere Klassen mit ähnlichem Pattern übertragen werden müssen?
+- 1–3 konkrete Skill-Verbesserungen aus den Rolllog-Einträgen
+- Kurz-Report-Abschnitt im `kaizen_report.md` (nicht der volle Querschnitts-Bericht)
 
-**Rollen-Tagebücher pflegen:** Erinnere jede Rolle am Ende ihres Einsatzes
-kurz einen Eintrag ins eigene Log zu schreiben (`.claude/artifacts/logs/<rolle>_log.md`).
+**Skalierung:** Bei „Mini-Features" (≤2 Phasen, eine einzelne Bug-Fix-FA, Notification-Erweiterung
+o. ä.) kann der Pro-Feature-Kaizen auf einen Kurz-Sweep der Rollen-Tagebücher reduziert werden —
+voller Bericht-Abschnitt nicht zwingend.
+
+### Pre-Release-Kaizen (vor jedem Major-Release)
+
+```
+@kaizen release
+```
+
+Querschnittlicher Lauf über alle Features des Release-Bündels. Zusätzlich: Pre-Major-Release-Gesamtreview
+(siehe nächster Abschnitt). Tieferer Bericht mit KPI-Trends über mehrere Features, Statistiken,
+Top-3-Empfehlungen.
+
+**Rollen-Tagebücher pflegen:** Erinnere jede Rolle am Ende ihres Einsatzes kurz einen Eintrag ins
+eigene Log zu schreiben (`.claude/artifacts/logs/<rolle>_log.md`).
+
+---
+
+## Pre-Major-Release-Gesamtreview (Pflicht-Gate)
+
+**Trigger:** Vor dem ersten Feature jedes neuen Major-Releases (R3.0, R4.0, …) — als eigener
+Schritt **vor** Phase 01 des ersten Features. Eingeführt per P-19 (Nutzer-Empfehlung 2026-05-30,
+empirisch bestätigt durch Pre-R3.0-Sweep mit 16 Major-Befunden in übergreifenden Strukturen).
+
+**Warum:** Feature-Reviews (Phasen 01–07 pro Feature) prüfen nur die jeweils neue Sektion.
+Übergreifende Strukturen (Übersichtstabellen, Status-Indizes, Diagramme, Konventionen) altern
+unbemerkt zwischen Features. Erst der horizontale Gesamt-Sweep macht Pflege-Lücken sichtbar —
+sie zu finden ist exponentiell teurer, wenn sie erst durch ein neues Feature-Bug bemerkt werden.
+
+### Aufbau
+
+1. **Linke V-Seite — getrennt pro Phase:**
+   - Vollständiger Review `requirements.md` gegen Reviewer-Checkliste „Review Requirements" → `reviews/review_01_requirements_full.md`
+   - Vollständiger Review `architecture.md` gegen Reviewer-Checkliste „Review Architektur" inkl. **≥3 Code-Stichproben** gegen zentrale Behauptungen (Schichten, Schema, Interface-Splits) → `reviews/review_02_architecture_full.md`
+   - Vollständiger Review **Code** gegen Reviewer-Checkliste „Code Review" inkl. systematische Anti-Pattern-Greps (`Thread.sleep`, `Force-Casts`, `Magic Numbers`, `Log.*`, `TODO/FIXME`, `runBlocking`, `!!`) → `reviews/review_03_code_full.md`
+   - Findings → **CRs anlegen** (Editorial / Substantive Track)
+
+2. **Rechte V-Seite — zusammen gereviewt:**
+   - Unit Tests + Integration Tests + System Tests in einem kombinierten Review → `reviews/review_04_05_06_tests_full.md`
+   - Begründung: Test-Phasen sind inhaltlich verschränkt („NFA-X wird auf welcher Ebene wirklich geprüft?"), und die rechte Seite ist kompakter als die linke.
+
+### Abschluss-Bedingung
+
+- Alle Major-Befunde als CR angelegt (in `change_requests.md`)
+- Substantive-CRs mit User-Entscheidung versehen (jetzt / verschieben / wontfix)
+- Editorial-CRs erledigt oder im Sprint geplant
+- Erst danach beginnt Phase 01 des ersten neuen Features
+
+### CR-Archivierung (P-28)
+
+Bei Erreichen von ~30 CRs in `change_requests.md` neue Datei `change_requests_archive_YYYY.md`
+anlegen, alte ✅ Erledigt-CRs dorthin verschieben. Index-Tabelle in der aktiven Datei zeigt
+nur noch offene + jüngst geschlossene CRs.
 
 ---
 
@@ -342,3 +400,94 @@ technisches Risiko, Datenverlust-Gefahr):
 2. Blockierungsgrund klar beschreiben
 3. Optionen zur Auflösung anbieten
 4. **Warten** — niemals eigenständig eine Blockade "auflösen"
+
+---
+
+## Change Request Management
+
+**Warum überhaupt CRs?** Sobald ein Feature die rechte V-Seite passiert hat, ist es
+„investiert": Anforderungen sind verlinkt, Architektur-Entscheidungen referenzieren FAs,
+Code zitiert IDs, Tests prüfen sie, die Traceability-Matrix mappt sie. Eine späte
+Änderung an einer FA/NFA ist nicht mehr ein lokaler Edit — sie kaskadiert. Der CR-Prozess
+macht diese Kaskade sichtbar, bevor sie unbemerkt Inkonsistenzen hinterlässt.
+
+**Wer löst einen CR aus?**
+- Reviewer-Findings (Major/Minor in jeder Phase nach Abschluss)
+- Nutzer-Feedback (UAT, Bug Reports)
+- Externe Änderungen (Architektur-Refactor, neue Plattform-API, Lizenz-Änderungen)
+- Folgefeatures, die etablierte FAs erweitern oder ablösen
+
+### Zwei Tracks (Overhead proportional halten)
+
+| Track | Wofür | Kennzeichen | Prozess |
+|------|-------|-------------|---------|
+| **Editorial** | Reines Doku-/Label-Update ohne Verhaltens-/Test-Auswirkung | Header-Metadaten, Status-Tabellen, Tippfehler, veraltete Out-of-Scope-Blöcke, Cross-References | CR anlegen → Requirements-Engineer (oder andere zuständige Rolle) fixt → Reviewer schließt. Kein Phasen-Re-Run. |
+| **Substantive** | Anforderungs-/Verhaltens-Änderung, die Code, Tests oder Architektur berühren *kann* | Geänderte FA-Aussage, neue NFA, gestrichene Anforderung, Widerspruch zu aktuellem Code | Impact-Analyse (welche Artefakte kaskaden?) → Nutzer-Entscheidung (jetzt / nächstes Release / wontfix) → Re-Run der betroffenen Phasen → Traceability-Check |
+
+> **Faustregel zur Track-Wahl:** Ändert sich durch den CR ein Test oder eine
+> Architektur-Entscheidung? → Substantive. Ändert sich nur ein Doku-Eintrag, der nirgendwo
+> als „Verhalten" geprüft wird? → Editorial.
+
+### Artefakte
+
+- **CR-Index:** `.claude/artifacts/change_requests.md` — chronologische Liste aller CRs mit Kurz-Status
+- **Einzelne CRs:** Im selben File als Unter-Abschnitte (kein eigenes File pro CR — wäre Overhead).
+  Vorlage: `.claude/skills/templates/change_request.md.template`
+
+### CR-Lebenszyklus
+
+```
+┌─ neu ───────────────────────────────────────────────────────────────┐
+│ CR-NNN angelegt mit: Titel, Quelle, Track, betroffene IDs, Impact   │
+└─────────────────────────────────────────────────────────────────────┘
+                                  ↓
+┌─ Triage (PM) ───────────────────────────────────────────────────────┐
+│ Track bestätigen · Impact validieren · Nutzer fragt bei Substantive │
+│ Status: Editorial → "in Arbeit" | Substantive → wartet auf Approval │
+└─────────────────────────────────────────────────────────────────────┘
+                                  ↓
+┌─ Umsetzung ─────────────────────────────────────────────────────────┐
+│ Editorial: zuständige Rolle (Req-Eng / Architekt / ...) fixt direkt │
+│ Substantive: betroffene Phasen erneut durchlaufen (mind. Phase 01)  │
+└─────────────────────────────────────────────────────────────────────┘
+                                  ↓
+┌─ Abschluss ─────────────────────────────────────────────────────────┐
+│ Reviewer signiert ab · CR-Index auf ✅ · ggf. minor_backlog leeren   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Pflichtfelder pro CR (im Template detailliert)
+
+- **ID** — `CR-NNN` (3-stellig, fortlaufend)
+- **Datum**, **Quelle** (Review-Befund / UAT / Bug / Folgefeature), **Track** (Editorial / Substantive)
+- **Betrifft** — konkrete IDs (FA/NFA, Test-IDs, Dateien)
+- **Beschreibung** — was ist falsch / soll geändert werden
+- **Impact-Analyse** — welche Artefakte kaskaden? (mind.: requirements / architecture / code / tests / traceability)
+- **Status** — `Neu` / `In Arbeit` / `Wartet auf Nutzer` / `Erledigt` / `Abgelehnt`
+- **Erledigt durch** — Commit / Datei-Edits / Phasen-Re-Run
+
+### Wann der PM einen CR auslösen muss
+
+- **Sofort** wenn ein Reviewer-Major-Befund nach Phasen-Abschluss entdeckt wird, der außerhalb der gerade laufenden Phase wirkt (z. B. Major-Befund in requirements während Phase 05)
+- **Bei UAT-Rückläufern**, die nicht durch einen kleinen Phase-03-Korrekturlauf zu fixen sind
+- **Wenn der Nutzer eine FA-Änderung anstößt** (egal in welcher Phase)
+
+Innerhalb einer laufenden Phase werden Befunde **nicht** als CR geführt — sie sind Teil der normalen Phasen-Arbeit.
+
+### PM-Tagebuch: CR-Erfahrung pflichtmäßig festhalten
+
+Nach **jedem geschlossenen CR** schreibt der Orchestrator einen kurzen Erfahrungs-Eintrag
+in `.claude/artifacts/logs/pm_log.md`:
+
+```markdown
+## YYYY-MM-DD | CR-NNN [Editorial/Substantive] — [Kurztitel]
+- Was lief gut: ...
+- Was war reibig: ...
+- Hat der gewählte Track gepasst, oder wäre der andere besser gewesen?
+- Empfehlung für den Prozess (für Kaizen)
+```
+
+Diese Einträge sind explizit dazu da, dass der **Kaizen-Prozessoptimierer** vor jedem
+Release auswerten kann, ob der CR-Prozess sein Geld wert ist oder wo er ausartet.
+**Editorial-CRs dürfen kurz dokumentiert werden** (1–2 Zeilen); bei Substantive-CRs
+ist die Reflexion ausführlicher.

@@ -1,0 +1,51 @@
+## CR-NNN | [Editorial | Substantive] — [Kurztitel ≤ 80 Zeichen]
+**Datum:** YYYY-MM-DD
+**Quelle:** [Review-Befund (review_XX_*.md → M-yy) | UAT | Bug Report | Folgefeature FYY | Sonstiges]
+**Status:** [Neu | In Arbeit | Wartet auf Nutzer | Erledigt | Abgelehnt]
+
+### Betrifft
+- **IDs:** [FA-FXX-yy, NFA-FXX-zz, ST-FXX-aa, UT-FXX-bb, …]
+- **Artefakte:**
+  - [ ] requirements.md
+  - [ ] architecture.md
+  - [ ] Code (Pfade)
+  - [ ] Unit Tests
+  - [ ] Integration Tests
+  - [ ] System Tests
+  - [ ] traceability_matrix.md
+  - [ ] impact_map.md
+  - [ ] 00_status.md
+  - [ ] Sonstiges: …
+
+### Beschreibung
+[1–3 Sätze: Was ist falsch / soll geändert werden, kurz und konkret. Was sagt das Artefakt heute, was soll es sagen?]
+
+### Begründung
+[Warum jetzt? Welche Konsequenz hat das Ignorieren? Bei Editorial: warum nicht direkt fixen ohne CR? (Antwort: Trail für Kaizen.)]
+
+### Impact-Analyse
+**Editorial:**
+- Verhalten unverändert? **Ja** — sonst falscher Track gewählt
+- Tests betroffen? Erwartung: **nein**. Wenn doch → Track wechseln auf Substantive.
+
+**Substantive — folgende Phasen sind potentiell re-zu-laufen:**
+- [ ] Phase 01 Requirements — FA/NFA-Wortlaut, Out-of-Scope, RBs
+- [ ] Phase 02 Architektur — betrifft Komponenten/Schnittstellen?
+- [ ] Phase 03 Code — betrifft welche Dateien?
+- [ ] Phase 04 Unit Tests — welche Test-IDs müssen ergänzt/angepasst werden?
+- [ ] Phase 05 Integration — DAOs/Migrationen betroffen?
+- [ ] Phase 06 System — neue/geänderte ST-Cases?
+- [ ] Traceability-Matrix — neue Zeilen/Spalten?
+
+### Entscheidung (bei Substantive)
+[Datum + Entscheider (User / PM)]
+- [ ] Jetzt umsetzen
+- [ ] Verschieben auf [Release / Feature]
+- [ ] Ablehnen (Begründung)
+
+### Umsetzung
+- [Datum] [Was wurde gemacht — Datei + Zeile, ggf. Commit-Hash]
+- [Datum] [Reviewer-Abnahme: ✅ / ⚠️]
+
+### Erledigt
+**Reviewer:** [Name/Rolle] | **Datum:** YYYY-MM-DD | **Verifikation:** [kurze Bestätigung dass die kaskadierten Artefakte konsistent sind]

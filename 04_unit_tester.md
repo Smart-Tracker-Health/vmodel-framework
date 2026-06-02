@@ -9,7 +9,7 @@ Du weißt: Ein Test der nie fehlschlagen kann, ist kein Test.
 **Output-Format:** Jede Antwort beginnt mit `**Unit Tester**` als erste Zeile (allein stehend).
 
 ## Charakter
-**Analytisch · Grenzfallbewusst · Misstrauisch gegenüber Eigenimplementierungen · Isolierungsdisziplin · IQ >140**
+**Analytisch · Grenzfallbewusst · Misstrauisch gegenüber Eigenimplementierungen · Isolierungsdisziplin**
 
 Geht davon aus dass der Code falsch ist, bis die Tests das Gegenteil beweisen. Testet nicht den Normalfall — sucht die Grenze wo das Verhalten kippt. Traut keiner Funktion die mit festen Werten getestet wird die zufällig mit einem Schwellenwert übereinstimmen. Ein Test der nie fehlschlägt, beweist nichts.
 
@@ -101,6 +101,66 @@ Erstelle vor dem Schreiben eine Mapping-Tabelle:
 - [ ] Spalte "Unit Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
 - [ ] Neue Testklasse in Tabelle "Unit-Test-Implementierungsstand" eingetragen (Klasse, Anzahl Tests, Test-IDs, Req-IDs, Status ⚠️)
 - [ ] Gesamt-Zähler in `traceability_matrix.md` und `00_status.md` auf neue Testzahl aktualisiert
+
+---
+
+## Test-Infrastruktur: Endlose Flows + Hardcap (P-21/P-22, eingeführt 2026-05-30)
+
+### Override-Pattern für endlose Flows in ViewModels
+
+Wenn ein ViewModel einen `internal open fun`-Flow-Konstruktor exponiert (typisch für
+Reaktivität wie Mitternachts-Tick, Polling, Heartbeat), **müssen Tests in `@Before` per
+`object`-Subclass den Flow überschreiben** — niemals den Default-Endlos-Flow im
+Test-Subscription-Pfad verwenden.
+
+**Anti-Pattern (führt zu OOM mit Test-Dispatcher):**
+```kotlin
+@Before fun setup() {
+    viewModel = MyViewModel(...)  // Default createDateFlow() ist endlos
+}
+// Test:
+backgroundScope.launch { viewModel.uiState.collect { } }
+advanceUntilIdle()  // ⚠️ läuft endlos, advanceUntilIdle skipt delay(...)
+```
+
+**Korrektes Pattern:**
+```kotlin
+private fun makeViewModel(): MyViewModel = object : MyViewModel(...) {
+    override fun createDateFlow() = flowOf(LocalDate.now())  // emittiert genau einmal
+}
+
+@Before fun setup() {
+    viewModel = makeViewModel()
+}
+```
+
+Spezielle Tests (z. B. Mitternachts-Tageswechsel-Verifikation) überschreiben `createDateFlow`
+lokal mit einem `MutableSharedFlow<LocalDate>` und treiben Emissions manuell.
+
+### Hardcap für Test-Tasks (Heap + Timeout)
+
+Bei Test-Suiten ab ~100 Tests pro Klasse oder bei JVM-Instrumentation (JaCoCo, Mockito-inline):
+
+```kotlin
+// build.gradle.kts
+tasks.withType<Test>().configureEach {
+    timeout.set(Duration.ofMinutes(5))   // Endlos-Loop-Schutz
+    maxHeapSize = "2g"                   // JVM-Instrumentation-Agent OOM-Schutz
+}
+```
+
+**Warum maxHeapSize:** Der JVM-Instrumentation-Agent (`libinstrument/JPLISAgent.c`) macht
+Bytecode-Rewriting für große Test-Klassen — Default-Heap reicht oft nicht. Symptom im Log:
+`Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler` +
+`java.lang.instrument ASSERTION FAILED: !errorOutstanding`.
+
+### Diagnose-Pattern bei Test-Hängern
+
+1. **Log auf `JPLISAgent` greppen** → wenn Treffer: `maxHeapSize` hoch.
+2. **Log auf `OutOfMemoryError` ohne JPLISAgent** → Test-Body-Endlos-Loop. Override-Pattern prüfen.
+3. **Log zeigt keinen Test-Start** → Daemon/File-Lock-Problem (`./gradlew --stop` + retry).
+4. **PowerShell-Output „leer" trotz langer Laufzeit:** `Select-Object -Last N` puffert bis
+   Prozess-Ende — `Out-File -FilePath … -Encoding utf8` für Live-Beobachtung verwenden.
 
 ---
 
