@@ -122,6 +122,28 @@ Aus requirements.md → NFA ableiten:
 - Offline: Alle Kern-Features ohne Netzwerk nutzbar?
 - Barrierefreiheit: Alle interaktiven Elemente zugänglich?
 
+#### Performance-Test-Pattern: Warmup-Run-Pflicht (P-34, ab 2026-05-31)
+
+Wenn die Performance-Schwelle **innerhalb von 5× der Cold-Start-Initzeit** der getesteten Klassen liegt, muss der Test einen Warmup-Run enthalten (Ergebnis verwerfen), bevor gemessen wird. Sonst wird der Test flaky, sobald die Schwelle verschärft wird:
+
+```kotlin
+@Test fun render_unterXMs() {
+    val warmup = render(data)   // Cold-Class-Init absorbieren
+    warmup.close()
+
+    val start = System.nanoTime()
+    val real = render(data)
+    val elapsedMs = (System.nanoTime() - start) / 1_000_000
+    try {
+        assertTrue("Render $elapsedMs ms, erlaubt < $threshold ms", elapsedMs < threshold)
+    } finally {
+        real.close()
+    }
+}
+```
+
+Lehre F14 Phase 06: NFA-F14-01 hat 5 s Schwelle gegen ~33 ms gemessenen Wert — 150× Marge, Warmup nicht nötig. Der Vorschlag im `system_tester_log.md`, die Schwelle auf 500 ms zu verschärfen, würde ohne Warmup Cold-Init-flaky machen.
+
 ### Regressionstests
 - 3-5 zentrale bestehende Features kurz prüfen
 - Fokus auf Features die architektonisch nah am neuen Feature sind
@@ -157,6 +179,20 @@ Faustregel: ≤ 50 Tests pro Batch.
 **Warum nicht auf höhere API-Version wechseln?** Min SDK des Projekts bestimmt die
 Test-Ziel-API — ältere API-spezifische Bugs würden auf neueren Emulatoren unentdeckt bleiben.
 Batching ist die korrekte Lösung — nicht API-Wechsel.
+
+#### Gradle-Properties mit `.` unter PowerShell (P-36, ab 2026-05-31)
+
+PowerShell zerlegt `-Pandroid.testInstrumentationRunnerArguments.class=…` am Punkt in mehrere Pseudo-Tasks und scheitert mit „Task '.testInstrumentationRunnerArguments.class=…' not found". Lösung: den gesamten Property-String einzeln-quoten.
+
+```powershell
+# falsch — Punkt-Zerlegung
+.\gradlew.bat :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=de.foo.MyTest
+
+# richtig
+.\gradlew.bat ':app:connectedDebugAndroidTest' '-Pandroid.testInstrumentationRunnerArguments.class=de.foo.MyTest'
+```
+
+Gilt analog für alle `-P*.*=*`-Properties. Spart ~30 s pro Test-Lauf-Versuch.
 
 ### Dual-API-Pflicht: Min SDK + aktuell stabile API
 

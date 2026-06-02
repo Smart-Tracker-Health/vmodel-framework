@@ -101,6 +101,8 @@ Erstelle vor dem Schreiben eine Mapping-Tabelle:
 - [ ] Spalte "Unit Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
 - [ ] Neue Testklasse in Tabelle "Unit-Test-Implementierungsstand" eingetragen (Klasse, Anzahl Tests, Test-IDs, Req-IDs, Status ⚠️)
 - [ ] Gesamt-Zähler in `traceability_matrix.md` und `00_status.md` auf neue Testzahl aktualisiert
+- [ ] **Visibility-Aufweichung nur mit gleichzeitig eingechecktem Test (P-32, ab 2026-05-31):** Wenn `private → internal` (oder `internal → public`) am Produktivcode geändert wurde, um etwas testbar zu machen, **muss der Test in derselben Phase eingecheckt sein**. Sonst Visibility zurückstellen und die Lücke als CR tracken. Lehre F14 Phase 04: `ampelColor` + `cellContent` wurden auf `internal` gezogen, Tests folgten erst in Phase 05 — bei einer Pause dazwischen hätten die Symbole still die Sichtbarkeit aufgeweicht ohne Nutzen.
+- [ ] **Verworfene Tests in Status-Datei tracken (P-35, ab 2026-05-31):** Wenn ein Test geschrieben aber wegen technischer Limitation gelöscht oder in eine spätere Phase verschoben wurde, **muss er als konkreter Bullet-Point in der Phasenzeile von `00_status.md` UND optional als CR aufgenommen werden**. Erwähnung nur im Phase-Report reicht nicht — der nächste Tester sieht den Report möglicherweise erst nach der Übergabe. Lehre F14 Phase 05: 4 Render-Tests existierten als kurzfristig gelöschtes Artefakt, ohne den Reviewer-Befund wären sie in Phase 06 vergessen worden.
 
 ---
 

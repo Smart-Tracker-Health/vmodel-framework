@@ -126,6 +126,30 @@ Bereiche der Logik abdecken.
 - [ ] Spalte "Integration Test" in `.claude/artifacts/traceability_matrix.md` für alle getesteten Req-IDs aktualisiert
 - [ ] Neue Testklasse in Tabelle "Integrations-Test-Implementierungsstand" eingetragen (Klasse, Anzahl Tests, Test-IDs, Req-IDs, Status ⚠️)
 - [ ] Gesamt-Zähler in `traceability_matrix.md` und `00_status.md` auf neue Testzahl aktualisiert
+- [ ] **Verworfene Tests in Status-Datei tracken (P-35, ab 2026-05-31):** Wenn ein Test geschrieben aber wegen technischer Limitation gelöscht oder in eine spätere Phase verschoben wurde → konkreter Bullet-Point in der `00_status.md`-Phasenzeile UND optional als CR. Lehre F14 Phase 05 (Render-Tests durch Robolectric-Shadow-Bug).
+
+---
+
+## Robolectric-Fallstricke (P-33, eingeführt 2026-05-31)
+
+Robolectric ist mächtig für reine Android-API-Logik (Color, Paint, TextPaint, Resources), hat aber zwei harte Limits, die teure Detours produzieren, wenn man sie blind übergeht:
+
+### 1. SDK-Pin gegen `compileSdk`-Drift
+Robolectric läuft den offiziellen Android-SDK-Releases hinterher. Wenn `compileSdk > Robolectric-Top-SDK`, scheitert `initializationError` mit `DefaultSdkPicker.java:NN`. Lösung: `app/src/test/resources/robolectric.properties` mit `sdk=<unterstützte API>` + Kommentar mit Datum und Grund, damit künftige Tester nicht raten müssen.
+
+### 2. PdfDocument-Shadow ist defekt (Stand 4.14)
+`PdfDocument().startPage(pageInfo)` wirft sofort `IllegalStateException: document is closed!`, obwohl das Doc frisch instanziiert ist. Workaround `@Config(maxSdk = ...)` hilft nicht. **Konsequenz:** `PdfDocument`-/`Canvas`-/`PdfRenderer`-Tests direkt nach `src/androidTest`, nicht über Robolectric. Lehre aus F14 Phase 05: ~30 Min Debug verloren, danach in Phase 06 in 3,2 s auf API-35-Emulator grün.
+
+### Pattern: API-Smoke-Test vor Test-Klasse
+Vor einer neuen Robolectric-Test-Klasse gegen eine Android-API, die noch nie genutzt wurde, **einen 3-Zeilen-Smoke-Test** durchlaufen lassen:
+
+```kotlin
+@Test fun smoke_canApiBeUsedAtAll() {
+    val x = SomeAndroidApi().basicOperation()  // muss laufen ohne Exception
+}
+```
+
+Wenn der Smoke-Test scheitert → Detour vermeiden, direkt androidTest planen. Spart die Diskussion „liegt's am Setup, am SDK, am Shadow, am Code?".
 
 ---
 

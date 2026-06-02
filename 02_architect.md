@@ -76,6 +76,7 @@ Typisch: stabile Schichten zuerst, UI zuletzt.
 - [ ] Schema-Änderungen und Migrationen vollständig geplant
 - [ ] Keine zirkulären Abhängigkeiten
 - [ ] Implementierungsreihenfolge logisch und umsetzbar
+- [ ] **NFA-Bibliothekszitate gegen Code/Build validiert (P-31, ab 2026-05-31):** Wenn eine NFA eine konkrete Bibliothek nennt (z. B. „OpenPDF", „Retrofit", „Glide"), per `grep` gegen `import`-Statements und `build.gradle*`-Dependencies prüfen, ob sie tatsächlich verwendet wird. Lehre aus CR-016 (NFA-F06-02/F14-02 sagten „OpenPDF", Code nutzt seit ~12 Monaten `android.graphics.pdf.PdfDocument`). Drift blieb unsichtbar, weil keine Phase die NFA-Lib-Zuordnung gegen die Realität prüft.
 
 ## Traceability-Pflichten
 

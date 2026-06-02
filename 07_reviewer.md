@@ -78,6 +78,7 @@ Reines Doku-vs-Doku-Checking findet keine Architecture↔Code-Drifts. Daher Pfli
   - Schichten-Modell: existieren die behaupteten Pakete (`ls`)? Haben die behaupteten Interfaces tatsächlich Implementations-Klassen (`grep "class X.*:"`)?
   - Schema-Tabellen vs. Entity-Code: stimmen Spalten und Typen mit der Doku überein?
   - DI-Bindings vs. Doku: existiert das beschriebene Hilt-Modul mit beschriebenen Bindings?
+- [ ] **NFA-Bibliothekszitate verifizieren (P-31, ab 2026-05-31):** Für jede NFA, die eine konkrete Bibliothek nennt, prüfen ob sie tatsächlich verwendet wird. Konkrete Greps: `grep -rn "<lib-keyword>" app/src/main/` gegen `import`-Statements, plus `grep "<lib-coord>" app/build.gradle*` gegen Dependencies. Wenn die NFA-Lib weder als Import noch als Dependency erscheint → Editorial CR aufmachen. **Lehre aus CR-016 (2026-05-31):** `NFA-F06-02` und `NFA-F14-02` sagten 12 Monate lang „OpenPDF", Code nutzte von Anfang an `android.graphics.pdf.PdfDocument`. Hätte mit `grep -r "openpdf"` in 5 s gefangen werden können.
 - **Lehre aus CR-010 (2026-05-29):** `architecture.md` versprach `ui → domain → data` mit Repository-Interfaces. Code hatte weder `domain/`-Layer noch Interfaces. Drift blieb 9 Monate unentdeckt — reiner Doku-Review hätte ihn nie aufgedeckt.
 
 ---
