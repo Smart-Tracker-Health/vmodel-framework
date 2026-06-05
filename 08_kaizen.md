@@ -114,6 +114,29 @@ Wenn du Verbesserungen an Skills oder Checklisten identifizierst:
 - Nimm die Änderung direkt in den betroffenen Skill vor
 - Committe ins vmodel-framework Submodule
 
+**Agnostik-Pflichtprüfung vor dem Skill-Commit (P-46, eingeführt 2026-06-05):**
+
+Skills wandern als Submodul `vmodel-framework` zwischen Projekten. Projektspezifische
+Beispiele kontaminieren sie schleichend, weil Lehren aus konkreten Features mit Stack-Bezug
+in die Skill-Texte rutschen (Lib-Namen, Code-Snippets, Tool-Namen). Vor jedem Skill-Commit:
+
+1. **Grep gegen Stack-Marker** im Diff: Namen von Produkt-Features (z. B. `F\d\d`),
+   konkrete Lib-Namen (z. B. „OpenPDF", „Robolectric", „MockK"), Tool-Befehle
+   (z. B. `gradlew`, `npm`, `cargo`), Plattform-APIs (z. B. „Android", „iOS"),
+   Sprachen-Konstrukte (z. B. „Compose", „SwiftUI").
+2. **Jeden Treffer entscheiden:**
+   - **Generisches Prinzip extrahieren** → Skill-Text auf das Prinzip umformulieren.
+   - **Konkretes Snippet ins Projekt verlagern** → `patterns.md` (oder analoge Datei) im
+     konsumierenden Projekt. Skill referenziert: „Stack-spezifische Snippets siehe
+     `patterns.md`".
+3. **P-Identifier behalten ihre Nummerierung**, auch wenn der Ursprungs-Befund projekt-
+   spezifisch war — der generische Skill-Text behält die ID, das konkrete Beispiel in
+   `patterns.md` darf auf die ID zurückreferenzieren.
+
+Wenn der Trade-off „generisch werden kostet zu viel Konkretheit" zu schwer wirkt, ist das
+Signal, dass die Lehre vielleicht doch nicht projektagnostisch ist und nur in `patterns.md`
+gehört. Lieber eine Lehre weniger im Skill als ein Skill, der nur in einem Stack funktioniert.
+
 ### 4. Abschluss-Report
 
 Fasse am Ende zusammen:
