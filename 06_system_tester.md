@@ -122,27 +122,13 @@ Aus requirements.md → NFA ableiten:
 - Offline: Alle Kern-Features ohne Netzwerk nutzbar?
 - Barrierefreiheit: Alle interaktiven Elemente zugänglich?
 
-#### Performance-Test-Pattern: Warmup-Run-Pflicht (P-34, ab 2026-05-31)
+#### Performance-Test-Pattern: Warmup-Run-Pflicht (P-34)
 
-Wenn die Performance-Schwelle **innerhalb von 5× der Cold-Start-Initzeit** der getesteten Klassen liegt, muss der Test einen Warmup-Run enthalten (Ergebnis verwerfen), bevor gemessen wird. Sonst wird der Test flaky, sobald die Schwelle verschärft wird:
+Wenn die Performance-Schwelle **innerhalb von 5× der Cold-Start-Initzeit** der getesteten Klassen liegt, muss der Test einen Warmup-Run enthalten (Ergebnis verwerfen), bevor gemessen wird. Sonst wird der Test flaky, sobald die Schwelle verschärft wird. Konkretes Code-Skelett für den jeweiligen Stack siehe `patterns.md`.
 
-```kotlin
-@Test fun render_unterXMs() {
-    val warmup = render(data)   // Cold-Class-Init absorbieren
-    warmup.close()
+#### Performance-Messwert im Report quantifizieren (P-Empfehlung)
 
-    val start = System.nanoTime()
-    val real = render(data)
-    val elapsedMs = (System.nanoTime() - start) / 1_000_000
-    try {
-        assertTrue("Render $elapsedMs ms, erlaubt < $threshold ms", elapsedMs < threshold)
-    } finally {
-        real.close()
-    }
-}
-```
-
-Lehre F14 Phase 06: NFA-F14-01 hat 5 s Schwelle gegen ~33 ms gemessenen Wert — 150× Marge, Warmup nicht nötig. Der Vorschlag im `system_tester_log.md`, die Schwelle auf 500 ms zu verschärfen, würde ohne Warmup Cold-Init-flaky machen.
+Tests sollen den gemessenen Wert ausgeben (z. B. via Logger oder Assert-Message), damit der Report nicht „weit unter Schwelle" sagen muss, sondern „X ms gegen Y ms Schwelle = Faktor N". Macht spätere Schwellenverschärfungen begründbar.
 
 ### Regressionstests
 - 3-5 zentrale bestehende Features kurz prüfen
@@ -180,19 +166,9 @@ Faustregel: ≤ 50 Tests pro Batch.
 Test-Ziel-API — ältere API-spezifische Bugs würden auf neueren Emulatoren unentdeckt bleiben.
 Batching ist die korrekte Lösung — nicht API-Wechsel.
 
-#### Gradle-Properties mit `.` unter PowerShell (P-36, ab 2026-05-31)
+#### Shell-/CLI-Quoting für Build-Properties (P-36)
 
-PowerShell zerlegt `-Pandroid.testInstrumentationRunnerArguments.class=…` am Punkt in mehrere Pseudo-Tasks und scheitert mit „Task '.testInstrumentationRunnerArguments.class=…' not found". Lösung: den gesamten Property-String einzeln-quoten.
-
-```powershell
-# falsch — Punkt-Zerlegung
-.\gradlew.bat :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=de.foo.MyTest
-
-# richtig
-.\gradlew.bat ':app:connectedDebugAndroidTest' '-Pandroid.testInstrumentationRunnerArguments.class=de.foo.MyTest'
-```
-
-Gilt analog für alle `-P*.*=*`-Properties. Spart ~30 s pro Test-Lauf-Versuch.
+Build-Tools haben oft Properties mit Sonderzeichen (Punkt, Komma, Gleichheitszeichen) im Namen. Manche Shells zerlegen sie unerwartet. Bei Erstanwendung eines Build-Property-Aufrufs in einer ungewohnten Shell: das gesamte Argument quoten. Stack-spezifische Snippets siehe `patterns.md`.
 
 ### Dual-API-Pflicht: Min SDK + aktuell stabile API
 
@@ -208,6 +184,15 @@ Compose-Test-Stack landet: API 35 als zweites Ziel verwenden.
 **Wann validiert?** Beide API-Ebenen müssen grün sein bevor Phase 07 (Review) beginnt.
 Min-SDK kann nachweisbar API-spezifische Bugs zeigen die auf der höheren API nicht auftreten
 (und umgekehrt) — nur Dual-Run deckt beides ab.
+
+#### Multi-Target-Pflicht aktiv durchsetzen (P-41)
+
+Lehre aus mehreren Releases: Wenn ein Skill mehrere Test-Targets (Versionen, Plattformen, Konfigurationen) als Pflicht definiert, **ohne PM-Gate** wird die Regel zur Wunschäußerung — der Tester startet das Target, das gerade verfügbar ist, und meldet die Phase als „abgeschlossen". Gegenmaßnahmen:
+
+- **PM-Check am Phase-Auftakt:** PM verifiziert vor Phase-06-Start, dass alle Targets verfügbar sind. Sonst Phase als „partial" freigeben mit Folgeauflage (CR) für die fehlenden Targets.
+- **Oder CI-Schritt:** Test-Suite läuft automatisch gegen alle Targets, Phase-06-Abnahme verlangt grünen CI-Status.
+
+Hinweise zu konkreten verfügbaren Targets im jeweiligen Projekt: `patterns.md`.
 
 ---
 
