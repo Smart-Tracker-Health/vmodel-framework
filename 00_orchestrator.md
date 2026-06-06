@@ -79,21 +79,6 @@ bash .claude/skills/templates/setup_logs.sh
 
 Danach kurz bestätigen: "Log-Verzeichnis eingerichtet." — kein weiterer Overhead.
 
-### 2b. Modus-Erkennung
-
-Prüfe ob `.claude/agents/requirements-engineer.md` existiert:
-- **Ja → Multi-Agent-Modus:** Jede Phase wird als isolierter Sub-Agent gespawnt. Du koordinierst nur, schreibst keine Artefakte selbst.
-- **Nein → Single-Agent-Modus:** Du lädst die Skill-Datei und übernimmst die Rolle selbst (Verhalten wie bisher).
-
-Ausgabe beim Start:
-```
-Modus: Multi-Agent ✓   (vmodel-agents unter .claude/agents/ gefunden)
-```
-oder
-```
-Modus: Single-Agent    (.claude/agents/ nicht gefunden — Fallback)
-```
-
 ### 3. Status prüfen
 Falls `.claude/artifacts/00_status.md` existiert:
 - Zeige den aktuellen Stand an
@@ -228,12 +213,17 @@ Reviews sind **Pflicht** nach Phase 04, 05, 06 im Auto-Modus — Befunde werden 
 
 | Kommando | Aktion |
 |----------|--------|
-| `@vmodel <Feature>` | Vollständiger Start bei Phase 01 |
+| `@vmodel <Feature>` | Vollständiger Start bei Phase 01 — Single-Agent-Modus |
+| `@vmodel <Feature> --multi` | Vollständiger Start bei Phase 01 — Multi-Agent-Modus (Sub-Agents) |
 | `@vmodel status` | Zeige aktuellen Status ohne Aktion |
 | `@arch <Feature>` | Direkt zu Phase 02 (setzt requirements.md voraus) |
+| `@arch <Feature> --multi` | Phase 02 im Multi-Agent-Modus |
 | `@dev` | Direkt zu Phase 03 (setzt requirements.md + architecture.md voraus) |
+| `@dev --multi` | Phase 03 im Multi-Agent-Modus |
 | `@test` | Direkt zu Phase 04 |
+| `@test --multi` | Phase 04 im Multi-Agent-Modus |
 | `@review` | Reviewer-Rolle für die zuletzt abgeschlossene Phase |
+| `@review --multi` | Reviewer als Sub-Agent |
 | `@vmodel reset` | Status zurücksetzen (Artefakte bleiben erhalten) |
 
 ---
@@ -251,9 +241,9 @@ Wenn eine Phase startet, gibst du folgende Einleitung aus:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**Single-Agent-Modus:** Lies die zugehörige Skill-Datei und übernimm die Rolle vollständig.
+**Single-Agent-Modus** (`@vmodel Feature`, default): Lies die zugehörige Skill-Datei und übernimm die Rolle vollständig.
 
-**Multi-Agent-Modus:** Spawne den Sub-Agent gemäß der Agent-Delegation (siehe unten). Warte auf die Rückgabe, prüfe das erzeugte Artefakt und fahre mit der nächsten Phase fort.
+**Multi-Agent-Modus** (`@vmodel Feature --multi`): Spawne den Sub-Agent gemäß der Agent-Delegation (siehe unten). Warte auf die Rückgabe, prüfe das erzeugte Artefakt und fahre mit der nächsten Phase fort. Der gewählte Modus gilt für den gesamten Workflow-Durchlauf — nicht pro Phase wechseln.
 
 ---
 
