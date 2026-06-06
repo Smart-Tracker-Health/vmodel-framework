@@ -79,6 +79,21 @@ bash .claude/skills/templates/setup_logs.sh
 
 Danach kurz bestätigen: "Log-Verzeichnis eingerichtet." — kein weiterer Overhead.
 
+### 2b. Modus-Erkennung
+
+Prüfe ob `.claude/agents/requirements-engineer.md` existiert:
+- **Ja → Multi-Agent-Modus:** Jede Phase wird als isolierter Sub-Agent gespawnt. Du koordinierst nur, schreibst keine Artefakte selbst.
+- **Nein → Single-Agent-Modus:** Du lädst die Skill-Datei und übernimmst die Rolle selbst (Verhalten wie bisher).
+
+Ausgabe beim Start:
+```
+Modus: Multi-Agent ✓   (vmodel-agents unter .claude/agents/ gefunden)
+```
+oder
+```
+Modus: Single-Agent    (.claude/agents/ nicht gefunden — Fallback)
+```
+
 ### 3. Status prüfen
 Falls `.claude/artifacts/00_status.md` existiert:
 - Zeige den aktuellen Stand an
@@ -236,7 +251,63 @@ Wenn eine Phase startet, gibst du folgende Einleitung aus:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Dann liest du die zugehörige Skill-Datei und übernimmst die Rolle vollständig.
+**Single-Agent-Modus:** Lies die zugehörige Skill-Datei und übernimm die Rolle vollständig.
+
+**Multi-Agent-Modus:** Spawne den Sub-Agent gemäß der Agent-Delegation (siehe unten). Warte auf die Rückgabe, prüfe das erzeugte Artefakt und fahre mit der nächsten Phase fort.
+
+---
+
+## Agent-Delegation (Multi-Agent-Modus)
+
+### Phasen-zu-Agent-Mapping
+
+| Phase | subagent_type | Haupt-Output |
+|-------|--------------|--------------|
+| 01 Requirements | `requirements-engineer` | `requirements.md` |
+| 01 Review | `reviewer` | `reviews/review_01_requirements_fXX.md` |
+| 02 Architektur | `architect` | `architecture.md` |
+| 02 Review | `reviewer` | `reviews/review_02_architecture_fXX.md` |
+| 03 Implementierung | `developer` | Code + `implementation_notes.md` |
+| 03 Review | `reviewer` | `reviews/review_03_code_fXX.md` |
+| 04 Unit Tests | `unit-tester` | `unit_test_report.md` |
+| 04 Review | `reviewer` | `reviews/review_04_unit_tests_fXX.md` |
+| 05 Integration | `integration-tester` | `integration_test_report.md` |
+| 05 Review | `reviewer` | `reviews/review_05_integration_tests_fXX.md` |
+| 06 System Tests | `system-tester` | `system_test_report.md` |
+| 06 Review | `reviewer` | `reviews/review_06_system_tests_fXX.md` |
+
+### Standard-Prompt-Vorlage
+
+Jeder Sub-Agent-Aufruf folgt diesem Schema:
+
+```
+Feature: [Feature-Name]
+Projektordner: [z.B. pb-08/]
+Arbeitsverzeichnis-Root: [absoluter Pfad zum Repo-Root]
+
+Lies zur Orientierung:
+- .claude/skills/CONVENTIONS.md
+- [projektordner]/.claude/project.md
+- [projektordner]/.claude/artifacts/00_status.md
+
+Input-Artefakte für diese Phase:
+- [Liste der relevanten Artefakte aus vorherigen Phasen]
+
+Deine Aufgabe:
+- [Phasen-spezifische Anweisung, z.B. "Schreibe requirements.md"]
+- Output-Pfad: [projektordner]/.claude/artifacts/[dateiname]
+
+Nach Abschluss: Gib eine kurze Summary zurück (was wurde entschieden/erzeugt,
+offene Punkte für den PM).
+```
+
+### PM-Verhalten nach Agent-Rückgabe
+
+1. Lies das erzeugte Artefakt (Pfad-Check: existiert es?)
+2. Prüfe ob Output-Datei vorhanden und nicht leer
+3. Bei Reviewer-Agents: werte Schweregrade aus (Kritisch/Major → Phase wiederholen, Minor → minor_backlog.md)
+4. Aktualisiere `00_status.md`
+5. Starte nächste Phase oder warte auf UAT-Gate
 
 ---
 
